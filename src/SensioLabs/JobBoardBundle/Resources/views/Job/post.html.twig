@@ -1,0 +1,79 @@
+{% extends "SensioLabsJobBoardBundle::layout.html.twig" %}
+{% from 'SensioLabsJobBoardBundle:Includes:breadcrumb.html.twig' import breadcrumb %}
+
+{% block page_class 'add' %}
+{% block title 'Update a Job' %}
+{% block javascript %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/sensiolabsjobboard/ckeditor/ckeditor.js') }}" type="text/javascript"></script>
+{% endblock %}
+{% block content %}
+
+    {{ breadcrumb({
+        'Post a job': null,
+    }) }}
+
+    <div class="box" style="padding-bottom:15px">
+        {{ form_start(form, {'attr': {'novalidate': 1}}) }}
+            <div class="padding">
+                <div class="head clearfix">
+
+                    {% if not form.vars.valid %}
+                        <div id="error">
+                            <h4 style="color:red"> Errors:</h4>
+                            <ul style="color:red">
+                                {% for row in form %}
+                                    {% for error in row.vars.errors %}
+                                        <li>{{ error.message }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <div class="title-company">
+                        <div class="company-label job-title">
+                            {{ form_widget(form.title) }}
+                        </div>
+                        <div class="company-label">
+                            <label class="label" for="company">@</label>
+                            <br/> <br/>
+                            {{ form_widget(form.company) }}
+                        </div>
+                    </div>
+
+                    <div class="country-city-contract">
+                        <div class="country-city clearfix">
+                            <div class="city-input country-select">
+                                {{ form_widget(form.country) }}
+                            </div>
+                            <div class="city-input">
+                                {{ form_widget(form.city) }}
+                            </div>
+                        </div>
+                        <div>
+                            {{ form_widget(form.contract_type) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    {{ form_widget(form.description) }}
+                </div>
+                <div class="how-to-apply">
+                    <h3> How to apply? </h3><br />
+                    {{ form_widget(form.how_to_apply) }}
+                </div>
+            </div>
+
+            <div class="padding clearfix">
+                <button class="green-button right" type="submit">
+                    <span class="sprite-icon-light-arrow-right"></span>
+                    <span>Preview</span>
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+
+    <div class="clear"></div>
+{% endblock %}

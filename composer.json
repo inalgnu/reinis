@@ -23,8 +23,6 @@
         "sensio/generator-bundle": "2.3.*",
         "sensiolabs/connect": "dev-master",
         "sensiolabs/connect-bundle": "dev-master",
-        "sensiolabs/connect-internal": "dev-master",
-        "sensiolabs/connect-internal-bundle": "dev-master",
         "symfony/assetic-bundle": "2.3.*",
         "symfony/monolog-bundle": "~2.4",
         "symfony/swiftmailer-bundle": "2.3.*",
