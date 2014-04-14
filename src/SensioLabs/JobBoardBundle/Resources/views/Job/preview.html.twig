@@ -8,8 +8,8 @@
 
 {% block content %}
     {{ breadcrumb({
-        'Manage':   path('manage'),
-        'Preview':  path('job_preview'),
+        'Post a job': path('job_post_form'),
+        'Preview':  path('job_preview', {'country_code': job.country, 'contract_type_text_slug': job.contracttypetextslug, 'title_slug': job.titleslug}),
     }) }}
 
     {% embed 'SensioLabsJobBoardBundle:Includes:job.html.twig' %}

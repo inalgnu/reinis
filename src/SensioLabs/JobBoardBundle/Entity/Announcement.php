@@ -3,7 +3,10 @@
 namespace SensioLabs\JobBoardBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Intl\Intl;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Sluggable\Util as Sluggable;
 
 /**
  * Announcement
@@ -30,6 +33,12 @@ class Announcement
      * @Assert\NotBlank(message="Job title should not be empty")
      */
     private $title;
+
+    /**
+     * @Gedmo\Slug(fields={"title"})
+     * @ORM\Column(length=128, unique=true)
+     */
+    private $title_slug;
 
     /**
      * @var string
@@ -60,7 +69,6 @@ class Announcement
 
     /**
      * @var integer
-     *
      * @ORM\Column(name="contract_type", type="integer")
      *
      * @Assert\NotBlank(message="Contract type should not be empty")
@@ -86,7 +94,7 @@ class Announcement
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -102,14 +110,14 @@ class Announcement
     public function setTitle($title)
     {
         $this->title = $title;
-    
+
         return $this;
     }
 
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -125,14 +133,14 @@ class Announcement
     public function setCompany($company)
     {
         $this->company = $company;
-    
+
         return $this;
     }
 
     /**
      * Get company
      *
-     * @return string 
+     * @return string
      */
     public function getCompany()
     {
@@ -148,14 +156,14 @@ class Announcement
     public function setCountry($country)
     {
         $this->country = $country;
-    
+
         return $this;
     }
 
     /**
      * Get country
      *
-     * @return string 
+     * @return string
      */
     public function getCountry()
     {
@@ -171,14 +179,14 @@ class Announcement
     public function setCity($city)
     {
         $this->city = $city;
-    
+
         return $this;
     }
 
     /**
      * Get city
      *
-     * @return string 
+     * @return string
      */
     public function getCity()
     {
@@ -194,14 +202,14 @@ class Announcement
     public function setContractType($contractType)
     {
         $this->contractType = $contractType;
-    
+
         return $this;
     }
 
     /**
      * Get contractType
      *
-     * @return string 
+     * @return string
      */
     public function getContractType()
     {
@@ -217,14 +225,14 @@ class Announcement
     public function setDescription($description)
     {
         $this->description = $description;
-    
+
         return $this;
     }
 
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -240,17 +248,47 @@ class Announcement
     public function setHowToApply($howToApply)
     {
         $this->howToApply = $howToApply;
-    
+
         return $this;
     }
 
     /**
      * Get howToApply
      *
-     * @return string 
+     * @return string
      */
     public function getHowToApply()
     {
         return $this->howToApply;
+    }
+
+    public function getContractTypeText()
+    {
+        return $this->getContractTypes()[$this->getContractType()];
+    }
+
+    /**
+     * Get titleSlug
+     *
+     * @return string
+     */
+    public function getTitleSlug()
+    {
+        return $this->title_slug;
+    }
+
+    public function getContractTypeTextSlug()
+    {
+        return Sluggable\Urlizer::urlize($this->getContractTypeText(), '-');
+    }
+
+    public static function getContractTypes()
+    {
+        return array(1 => 'Full Time', 2 => 'Part Time', 3 => 'Internship', 4 => 'Freelance', 5 => 'Alternance');
+    }
+
+    public function getCountryName()
+    {
+        return Intl::getRegionBundle()->getCountryName($this->country);
     }
 }
