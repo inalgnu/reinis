@@ -37,7 +37,7 @@ class JobController extends Controller
      */
     public function getPostFormAction(Request $request)
     {
-        $form = $this->createForm(new AnnouncementType(), new Announcement(), array(
+        $form = $this->createForm('announcement', new Announcement(), array(
             'action' => $this->generateUrl('job_post'),
             'method' => 'POST',
         ));
@@ -53,7 +53,7 @@ class JobController extends Controller
     public function postAction(Request $request)
     {
         $announcement = new Announcement();
-        $form = $this->createForm(new AnnouncementType(), $announcement);
+        $form = $this->createForm('announcement', $announcement);
 
         $form->handleRequest($request);
 
@@ -66,9 +66,7 @@ class JobController extends Controller
             return $this->redirect($this->generateUrl('job_preview'));
         }
 
-        return array(
-            'form'  => $form->createView(),
-        );
+        return array('form' => $form->createView());
     }
 
     /**

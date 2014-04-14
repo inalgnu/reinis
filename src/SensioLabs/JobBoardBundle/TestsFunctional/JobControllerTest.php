@@ -3,6 +3,7 @@
 namespace SensioLabs\JobBoardBundle\TestFunctional;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class JobControllerTest extends WebTestCase
 {
@@ -12,10 +13,10 @@ class JobControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/post');
 
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
 
         $crawler = $client->request('POST', '/post');
 
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
 }

@@ -1,1 +1,5 @@
 services:
+    sensio_labs.job_board_bundle.form.type.announcement:
+        class: SensioLabs\JobBoardBundle\Form\Type\AnnouncementType
+        tags:
+            - { name: form.type, alias: announcement }

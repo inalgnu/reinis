@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Announcement
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="SensioLabs\JobBoardBundle\Entity\AnnouncementRepository")
+ * @ORM\Entity()
  */
 class Announcement
 {
@@ -25,7 +25,7 @@ class Announcement
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\Column(name="title")
      *
      * @Assert\NotBlank(message="Job title should not be empty")
      */
@@ -43,7 +43,7 @@ class Announcement
     /**
      * @var string
      *
-     * @ORM\Column(name="country", type="string", length=255)
+     * @ORM\Column(name="country", type="string", length=2)
      *
      * @Assert\NotBlank(message="Country title should not be empty")
      */
@@ -52,18 +52,18 @@ class Announcement
     /**
      * @var string
      *
-     * @ORM\Column(name="city", type="string", length=255)
+     * @ORM\Column(name="city", type="string", length=64)
      *
      * @Assert\NotBlank(message="City title should not be empty")
      */
     private $city;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="contract_type", type="string", length=255)
+     * @ORM\Column(name="contract_type", type="integer")
      *
-     * @Assert\NotBlank(message="Contract title should not be empty")
+     * @Assert\NotBlank(message="Contract type should not be empty")
      */
     private $contractType;
 

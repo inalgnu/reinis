@@ -10,31 +10,17 @@ class AnnouncementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', 'text', array(
-                'attr' => array(
-                    'placeholder' => 'Job Title'
-                ),
-                'required' => true,
-            ))
-            ->add('company', 'text', array(
-                'attr' => array(
-                    'placeholder' => 'Company'
-                ),
-                'required' => true
-            ))
-            ->add('country', 'country', array(
-                'required'  => true,
-            ))
+            ->add('title', 'text', array('attr' => array('placeholder' => 'Job Title'), 'required' => true))
+            ->add('company', 'text', array('attr' => array('placeholder' => 'Company'), 'required' => true))
+            ->add('country', 'country', array('required'  => true))
             ->add('city', 'text', array(
                 'attr' => array(
                     'class' => 'location',
                     'placeholder' => 'City'
                 ),
-                'required' => true,
-                'max_length' => 80,
+                'required' => true, 'max_length' => 80
             ))
-            ->add('contract_type','choice', array(
-                'choices' => array(
+            ->add('contract_type', 'choice', array('choices' => array(
                     'empty_value' => 'Type of contract',
                     1 => 'Full Time',
                     2 => 'Part Time',
@@ -42,7 +28,7 @@ class AnnouncementType extends AbstractType
                     4 => 'Freelance',
                     5 => 'Alternance'
                 ),
-                'required' => true,
+                'required' => true
             ))
             ->add('description', 'textarea', array(
                 'attr' => array(
@@ -50,14 +36,9 @@ class AnnouncementType extends AbstractType
                     'rows'  => 20,
                     'class' => 'ckeditor',
                 ),
-                'required' => true,
+                'required' => true
             ))
-            ->add('how_to_apply', 'text', array(
-                'attr' => array(
-                    'placeholder' => 'Send your resume at ...'
-                ),
-                'required'  => false,
-            ))
+            ->add('how_to_apply', 'text', array('attr' => array('placeholder' => 'Send your resume at ...'), 'required'  => false))
         ;
     }
 
