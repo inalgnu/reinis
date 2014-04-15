@@ -3,3 +3,8 @@ services:
         class: SensioLabs\JobBoardBundle\Form\Type\AnnouncementType
         tags:
             - { name: form.type, alias: announcement }
+
+    twig.extension.text:
+        class: Twig_Extensions_Extension_Text
+        tags:
+            - { name: twig.extension }

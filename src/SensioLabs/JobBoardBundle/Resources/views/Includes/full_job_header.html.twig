@@ -8,7 +8,9 @@
     <span class="filter">
         <a href="#">{{ job.city }}, {{ job.countryname }}</a> /
         <a href="#">{{ job.contracttype }}</a>
+
+        <br/><span class="archived">Archived since {{ job.getCreatedAt|date('d/m/Y') }}</span>
     </span>
 </div>
 
-<span class="company">@&nbsp; {{ job.company }}</span>
+<span class="company">@&nbsp;{{ job.company }}</span>

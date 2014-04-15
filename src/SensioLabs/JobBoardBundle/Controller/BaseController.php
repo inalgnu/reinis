@@ -16,10 +16,14 @@ class BaseController extends Controller
     public function indexAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            return $this->render('SensioLabsJobBoardBundle:Includes:job_container.html.twig');
+            $jobs = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement')->getList($request->get('page'));
+
+            return $this->render('SensioLabsJobBoardBundle:Includes:job_container.html.twig', array('jobs' => $jobs));
         }
 
-        return array();
+        $jobs = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement')->getList(1);
+
+        return array('jobs' => $jobs);
     }
 
     /**

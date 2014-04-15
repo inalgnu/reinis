@@ -5,6 +5,7 @@ namespace SensioLabs\JobBoardBundle\TestFunctional;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncementData;
 
 class AnnouncementTest extends WebTestCase
 {
@@ -91,5 +92,36 @@ class AnnouncementTest extends WebTestCase
         $crawler = $this->client->followRedirect();
 
         $this->assertRegExp('/Developer 2/', $crawler->filter('.title')->text());
+    }
+
+    public function testAnnouncementList()
+    {
+        $this->loadFixtures();
+
+        $crawler = $this->client->request('GET', '/');
+
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        $this->assertCount(10, $crawler->filter('.box'));
+    }
+
+    public function testAnnouncementListAjaxCall()
+    {
+        $this->loadFixtures();
+
+        // We simulate an ajax call in homepage
+        $crawler = $this->client->request('GET', '/', array('page' => 2), array(), array(
+            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+        ));
+
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        $this->assertCount(10, $crawler->filter('.box'));
+    }
+
+    protected function loadFixtures()
+    {
+        $fixture = new LoadAnnouncementData();
+        $fixture->load($this->client->getContainer()->get('doctrine')->getManager());
     }
 }

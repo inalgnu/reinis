@@ -13,7 +13,7 @@ use SensioLabs\JobBoardBundle\Exception\InvalidStatusUpdateException;
  * Announcement
  *
  * @ORM\Table()
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="SensioLabs\JobBoardBundle\Entity\AnnouncementRepository")
  */
 class Announcement
 {
@@ -109,6 +109,14 @@ class Announcement
      * @ORM\Column(name="status", type="string", length=16)
      */
     private $status;
+
+    /**
+     * @var datetime
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
 
     /**
      * Get id
@@ -352,5 +360,15 @@ class Announcement
         }
 
         throw new InvalidStatusUpdateException(sprintf('Entity status cannot pass from %s to %s', $this->status, self::STATUS_SAVED));
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }

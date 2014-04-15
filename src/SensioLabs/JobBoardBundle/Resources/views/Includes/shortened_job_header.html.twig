@@ -1,14 +1,13 @@
 <div class="details">
     <span class="filter">
-        <a href="#">Paris, France</a> /
-        <a href="#">Full time</a>
+        <a href="#">{{ job.city }}, {{ job.countryname }}</a> /
+        <a href="#">{{ job.contracttype }}</a>
         
-        <br/><span class="archived">Archived since 12/12/2013</span>
-
+        <br/><span class="archived">Archived since {{ job.getCreatedAt|date('d/m/Y') }}</span>
     </span>
 </div>
 
 <a href="{{ path('job_show') }}" class="title">
-    Developer
-    <span class="company">@&nbsp;SensioLabs</span>
+    {{ job.title }}
+    <span class="company">@&nbsp;{{ job.company }}</span>
 </a>
