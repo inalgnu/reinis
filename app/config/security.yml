@@ -4,10 +4,12 @@ security:
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
-        sensiolabs_connect:
-            connect_memory:
+        in_memory:
+            memory:
                 users:
-                    36221b12-f362-4dca-8724-4da82ef2ba49: "ROLE_ADMIN" # Sarah Khalil
+                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+
     firewalls:
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
@@ -15,11 +17,6 @@ security:
 
         secured_area:
             pattern:    ^/
-            sensiolabs_connect:
-                check_path:  /session/callback
-                login_path:  /login
-                remember_me: false
-                provider:    sensiolabs_connect
             logout:          ~
             anonymous:       true
 

@@ -5,51 +5,55 @@ namespace SensioLabs\JobBoardBundle\TestFunctional;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\Tools\SchemaTool;
 
 class AnnouncementTest extends WebTestCase
 {
-    protected $client;
-
-    public function setUp()
+    protected function setUp()
     {
-        $kernel = static::createKernel();
-        $kernel->boot();
+        $client = static::createClient();
 
-        $this->client = static::createClient();
+        $purger = new ORMPurger($client->getContainer()->get('doctrine')->getManager());
+        $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
+        $purger->purge();
+
+        parent::tearDown();
     }
 
     public function testResponseIsSuccessful()
     {
-        $this->client->request('GET', '/post');
+        $client = static::createClient();
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $client->request('GET', '/post');
 
-        $this->client->request('POST', '/post');
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $client->request('POST', '/post');
+
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
 
     public function testFormSubmissionAndRedirection()
     {
-        $crawler = $this->client->request('GET', '/post');
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/post');
 
         $form = $crawler->selectButton('Preview')->form(array(
             'announcement[title]' => 'Developer',
             'announcement[company]' => 'SensioLabs',
             'announcement[country]' => 'FR',
             'announcement[city]' => 'Paris',
-            'announcement[contract_type]'=> 1,
+            'announcement[contract_type]'=> 'Full Time',
             'announcement[description]' => 'Some description...',
             'announcement[how_to_apply]' => 'jobs@sensiolabs.com',
         ));
 
-        $this->client->submit($form);
+        $client->submit($form);
 
-        $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/full-time/developer/preview'));
+        $this->assertEquals(Response::HTTP_FOUND, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/FR/full-time/developer/preview'));
 
-        $crawler = $this->client->followRedirect();
+        $crawler = $client->followRedirect();
 
         $this->assertRegExp('/Developer/', $crawler->filter('.title')->text());
         $this->assertRegExp('/SensioLabs/', $crawler->filter('.company')->text());
@@ -60,17 +64,8 @@ class AnnouncementTest extends WebTestCase
 
         $link = $crawler->selectLink('Make changes')->link();
 
-        $this->client->click($link);
+        $client->click($link);
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    }
-
-    protected function tearDown()
-    {
-        $purger = new ORMPurger($this->client->getContainer()->get('doctrine')->getManager());
-        $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
-        $purger->purge();
-
-        parent::tearDown();
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
 }

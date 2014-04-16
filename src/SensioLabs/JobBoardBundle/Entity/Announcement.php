@@ -16,6 +16,12 @@ use Gedmo\Sluggable\Util as Sluggable;
  */
 class Announcement
 {
+    const FULL_TIME = 'Full Time';
+    const PART_TIME = 'Part Time';
+    const INTERNSHIP = 'Internship';
+    const FREELANCE = 'Freelance';
+    const ALTERNANCE = 'Alternance';
+
     /**
      * @var integer
      *
@@ -35,10 +41,13 @@ class Announcement
     private $title;
 
     /**
+     * @var string
+     *
      * @Gedmo\Slug(fields={"title"})
-     * @ORM\Column(length=128, unique=true)
+     *
+     * @ORM\Column(name="title_slug", length=128, unique=true)
      */
-    private $title_slug;
+    private $titleSlug;
 
     /**
      * @var string
@@ -68,8 +77,9 @@ class Announcement
     private $city;
 
     /**
-     * @var integer
-     * @ORM\Column(name="contract_type", type="integer")
+     * @var string
+     *
+     * @ORM\Column(name="contract_type", type="string", length=16)
      *
      * @Assert\NotBlank(message="Contract type should not be empty")
      */
@@ -262,11 +272,6 @@ class Announcement
         return $this->howToApply;
     }
 
-    public function getContractTypeText()
-    {
-        return $this->getContractTypes()[$this->getContractType()];
-    }
-
     /**
      * Get titleSlug
      *
@@ -274,17 +279,12 @@ class Announcement
      */
     public function getTitleSlug()
     {
-        return $this->title_slug;
+        return $this->titleSlug;
     }
 
-    public function getContractTypeTextSlug()
+    public function getContractTypeSlug()
     {
-        return Sluggable\Urlizer::urlize($this->getContractTypeText(), '-');
-    }
-
-    public static function getContractTypes()
-    {
-        return array(1 => 'Full Time', 2 => 'Part Time', 3 => 'Internship', 4 => 'Freelance', 5 => 'Alternance');
+        return Sluggable\Urlizer::urlize($this->getContractType(), '-');
     }
 
     public function getCountryName()
