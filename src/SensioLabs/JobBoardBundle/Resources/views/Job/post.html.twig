@@ -11,10 +11,11 @@
 {% import "SensioLabsJobBoardBundle::form_error.html.twig" as macros %}
 
 {% block content %}
-
-    {{ breadcrumb({
-        'Post a job': null,
-    }) }}
+    {% if form.vars.value.isSaved %}
+        {{ breadcrumb({'Post a job': path('job_post'), (form.vars.value.title): null}) }}
+    {% else %}
+        {{ breadcrumb({'Post a job': path('job_post')}) }}
+    {% endif %}
 
     <div class="box" style="padding-bottom:15px">
         {{ form_start(form, {'attr': {'novalidate': 1}}) }}
@@ -68,7 +69,13 @@
             <div class="padding clearfix">
                 <button class="green-button right" type="submit">
                     <span class="sprite-icon-light-arrow-right"></span>
-                    <span>Preview</span>
+                    <span>
+                        {% if form.vars.value.isSaved %}
+                            Update
+                        {% else %}
+                            Preview
+                        {% endif %}
+                    </span>
                 </button>
             </div>
         {{ form_end(form) }}

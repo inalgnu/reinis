@@ -8,7 +8,7 @@
     {% block job_description %}
         <div class="clear"></div>
         <div id="job-description" class="padding description">
-            {{ job.description|raw }}
+            {{ job.description|purify }}
         </div>
     {% endblock %}
 

@@ -8,14 +8,14 @@
 
 {% block content %}
     {{ breadcrumb({
-        'Post a job': path('job_post_form'),
-        'Preview':  path('job_preview', {'country_code': job.country, 'contract_type_text_slug': job.contracttypetextslug, 'title_slug': job.titleslug}),
+        'Post a job': path('job_post'),
+        'Preview':  path('job_preview', {'country_code': job.country, 'contract_type_slug': job.contracttypeslug, 'title_slug': job.titleslug}),
     }) }}
 
     {% embed 'SensioLabsJobBoardBundle:Includes:job.html.twig' %}
         {% block job_steps %}
             <div class="padding clearfix">
-                <a href="{{ path('job_post_form') }}" class="green-button left"><span class="sprite-icon-light-arrow-left"></span>
+                <a href="{{ path('job_post') }}" class="green-button left"><span class="sprite-icon-light-arrow-left"></span>
                     <span>Make changes</span>
                 </a>
                 <a href="#" class="green-button right"><img src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" class="sprite-icon-cloud-upload" />

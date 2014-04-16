@@ -10,21 +10,27 @@ class AnnouncementType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $contractTypes = array(
+            Announcement::FULL_TIME,
+            Announcement::PART_TIME,
+            Announcement::INTERNSHIP,
+            Announcement::FREELANCE,
+            Announcement::ALTERNANCE
+        );
+
         $builder
             ->add('title', 'text', array('attr' => array('placeholder' => 'Job Title')))
             ->add('company', 'text', array('attr' => array('placeholder' => 'Company')))
             ->add('country', 'country')
             ->add('city', 'text', array(
                 'attr' => array('class' => 'location', 'placeholder' => 'City'),
-                'max_length' => 80,
+                'max_length' => 80
             ))
             ->add('contract_type','choice', array(
                 'empty_value' => 'Type of contract',
-                'choices' => Announcement::getContractTypes(),
+                'choices' => array_combine($contractTypes, $contractTypes)
             ))
-            ->add('description', 'textarea', array(
-                'attr' => array('style' => 'width: 100%', 'rows'  => 20, 'class' => 'ckeditor'),
-            ))
+            ->add('description', 'textarea', array('attr' => array('style' => 'width: 100%', 'rows'  => 20, 'class' => 'ckeditor')))
             ->add('how_to_apply', 'text', array('attr' => array('placeholder' => 'Send your resume at ...')))
         ;
     }

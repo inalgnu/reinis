@@ -5,18 +5,23 @@ namespace SensioLabs\JobBoardBundle\TestFunctional;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\Tools\SchemaTool;
 
 class AnnouncementTest extends WebTestCase
 {
-    protected $client;
+    private $client;
 
-    public function setUp()
+    protected function setUp()
     {
-        $kernel = static::createKernel();
-        $kernel->boot();
-
         $this->client = static::createClient();
+
+        $purger = new ORMPurger($this->client->getContainer()->get('doctrine.orm.entity_manager'));
+        $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
+        $purger->purge();
+    }
+
+    protected function tearDown()
+    {
+        $this->client = null;
     }
 
     public function testResponseIsSuccessful()
@@ -39,7 +44,7 @@ class AnnouncementTest extends WebTestCase
             'announcement[company]' => 'SensioLabs',
             'announcement[country]' => 'FR',
             'announcement[city]' => 'Paris',
-            'announcement[contract_type]'=> 1,
+            'announcement[contract_type]'=> 'Full Time',
             'announcement[description]' => 'Some description...',
             'announcement[how_to_apply]' => 'jobs@sensiolabs.com',
         ));
@@ -58,19 +63,33 @@ class AnnouncementTest extends WebTestCase
         $this->assertRegExp('/Some description../', $crawler->filter('.description')->text());
         $this->assertRegExp('/jobs@sensiolabs.com/', $crawler->filter('.how-to-apply')->text());
 
+        // Check the pre-filled form after clicking on make changes
         $link = $crawler->selectLink('Make changes')->link();
 
-        $this->client->click($link);
+        $crawler = $this->client->click($link);
 
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    }
 
-    protected function tearDown()
-    {
-        $purger = new ORMPurger($this->client->getContainer()->get('doctrine')->getManager());
-        $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
-        $purger->purge();
+        $form = $crawler->selectButton('Update')->form();
 
-        parent::tearDown();
+        $this->assertEquals('Developer', $form['announcement[title]']->getValue());
+        $this->assertEquals('SensioLabs', $form['announcement[company]']->getValue());
+        $this->assertEquals('FR', $form['announcement[country]']->getValue());
+        $this->assertEquals('Paris', $form['announcement[city]']->getValue());
+        $this->assertEquals('Full Time', $form['announcement[contract_type]']->getValue());
+        $this->assertEquals('Some description...', $form['announcement[description]']->getValue());
+        $this->assertEquals('jobs@sensiolabs.com', $form['announcement[how_to_apply]']->getValue());
+
+        // Update the title and check if the route parameter is correct
+        $form['announcement[title]'] = 'Developer 2';
+
+        $this->client->submit($form);
+
+        $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/full-time/developer-2/preview'));
+
+        $crawler = $this->client->followRedirect();
+
+        $this->assertRegExp('/Developer 2/', $crawler->filter('.title')->text());
     }
 }

@@ -4,12 +4,10 @@ namespace SensioLabs\JobBoardBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use SensioLabs\JobBoardBundle\Entity\Announcement;
-use SensioLabs\JobBoardBundle\Form\Type\AnnouncementType;
 
 class JobController extends Controller
 {
@@ -23,58 +21,55 @@ class JobController extends Controller
     }
 
     /**
-     * @Route("/{country_code}/{contract_type_text_slug}/{title_slug}/preview", name="job_preview")
+     * @Route("/{country_code}/{contract_type_slug}/{title_slug}/preview", name="job_preview")
      * @Template()
      */
-    public function previewAction($title_slug)
+    public function previewAction(Request $request)
     {
+        $titleSlug = $request->attributes->get('title_slug');
+
         $em = $this->getDoctrine()->getManager();
-        $announcement = $em->getRepository('SensioLabsJobBoardBundle:Announcement')->findOneBy(array('title_slug' => $title_slug));
+        $announcement = $em->getRepository('SensioLabsJobBoardBundle:Announcement')->findOneBy(array('titleSlug' => $titleSlug));
 
         if (!$announcement) {
-           throw new NotFoundHttpException(sprintf('Unable to find announcement with title_slug %s', $title_slug));
+           throw $this->createNotFoundException(sprintf('Unable to find announcement with titleSlug %s', $titleSlug));
         }
 
-        return array(
-            'job' => $announcement,
-        );
+        return array('job' => $announcement);
     }
 
     /**
-     * @Route("/post", name="job_post_form")
+     * @Route("/post", name="job_post")
      * @Method({"GET"})
-     * @Template("SensioLabsJobBoardBundle:Job:post.html.twig")
+     * @Template()
      */
-    public function getPostFormAction()
+    public function postAction()
     {
-        if ($announcementId = $this->get('session')->get('announcement_id')) {
-            $announcement = $this->getAnnouncement($announcementId);
-        } else {
-            $announcement =  new Announcement();
-        }
-
-        $form = $this->createForm('announcement', $announcement, array(
-            'action' => $this->generateUrl('job_post'),
-            'method' => 'POST',
+        $form = $this->createForm('announcement', $this->getAnnouncement(), array(
+            'action' => $this->generateUrl('job_post_save'),
+            'method' => 'POST'
         ));
 
         return array('form' => $form->createView());
     }
 
     /**
-     * @Route("/post", name="job_post")
+     * @Route("/post", name="job_post_save")
      * @Method({"POST"})
-     * @Template()
+     * @Template("SensioLabsJobBoardBundle:Job:post.html.twig")
      */
-    public function postAction(Request $request)
+    public function savePostAction(Request $request)
     {
-        $announcement = new Announcement();
+        $announcement = $this->getAnnouncement();
+
         $form = $this->createForm('announcement', $announcement);
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            $announcement->backup();
 
             $em->persist($announcement);
             $em->flush();
@@ -83,7 +78,7 @@ class JobController extends Controller
 
             return $this->redirect($this->generateUrl('job_preview', array(
                 'country_code' => $announcement->getCountry(),
-                'contract_type_text_slug' => $announcement->getContractTypeTextSlug(),
+                'contract_type_slug' => $announcement->getContractTypeSlug(),
                 'title_slug' => $announcement->getTitleSlug()
             )));
         }
@@ -92,19 +87,26 @@ class JobController extends Controller
     }
 
     /**
-     * @param $id
      * @return Announcement
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    private function getAnnouncement($id)
+    private function getAnnouncement()
     {
-        $em = $this->getDoctrine()->getManager();
-        $announcement = $em->getRepository('SensioLabsJobBoardBundle:Announcement')->findOneById($id);
+        if ($id = $this->get('session')->get('announcement_id')) {
+            $em = $this->getDoctrine()->getManager();
+            $announcement = $em->getRepository('SensioLabsJobBoardBundle:Announcement')->findOneById($id);
 
-        if (!$announcement) {
-            throw new NotFoundHttpException(sprintf('Unable to find announcement with id %s', $id));
+            if (!$announcement) {
+                if ($this->get('session')->has('announcement_id')) {
+                    $this->get('session')->remove('announcement_id');
+                }
+
+                throw $this->createNotFoundException(sprintf('Unable to find announcement with id %s', $id));
+            }
+
+            return $announcement;
         }
 
-        return $announcement;
+        return new Announcement();
     }
 }

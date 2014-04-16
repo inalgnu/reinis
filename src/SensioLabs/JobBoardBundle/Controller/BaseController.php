@@ -23,15 +23,6 @@ class BaseController extends Controller
     }
 
     /**
-     * @Route("/post", name="job_post")
-     * @Template()
-     */
-    public function postAction(Request $request)
-    {
-        return array();
-    }
-
-    /**
      * @Route("/manage", name="manage")
      * @Template()
      */
