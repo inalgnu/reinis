@@ -1,7 +1,7 @@
 <div class="details">
     <span class="filter">
-        <a href="#">{{ job.city }}, {{ job.countryname }}</a> /
-        <a href="#">{{ job.contracttype }}</a>
+        <a href="{{ path('homepage', (app.request.query.all)|merge({'country-code': job.country})) }}">{{ job.city }}, {{ job.country|country }}</a> /
+        <a href="{{ path('homepage', (app.request.query.all)|merge({'contract-type': job.contracttype})) }}">{{ job.contracttype }}</a>
         
         <br/><span class="archived">Archived since {{ job.getCreatedAt|date('d/m/Y') }}</span>
     </span>

@@ -13,18 +13,27 @@ class LoadAnnouncementData implements FixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        for ($i = 1; $i < 21; $i++) {
+        for ($i = 1; $i < 41; $i++) {
             $announcement = new Announcement();
             $announcement
                 ->setTitle('Developer '. $i)
                 ->setCompany('SensioLabs')
+                ->setCity('Paris')
                 ->setCountry('FR')
-                ->setCity('France')
+                ->setContractType('Full Time')
                 ->setDescription('lorem ipsum, bla bla bla...')
                 ->setContractType('Full Time')
                 ->setHowToApply('jobs@sensiolabs.com')
                 ->setStatus(Announcement::STATUS_SAVED)
             ;
+
+            if ($i > 20) {
+                $announcement->setCountry('GB');
+
+                if ($i > 30) {
+                    $announcement->setContractType('Internship');
+                }
+            }
 
             $manager->persist($announcement);
         }

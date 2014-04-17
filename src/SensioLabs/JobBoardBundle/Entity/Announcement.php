@@ -304,11 +304,6 @@ class Announcement
         return Sluggable\Urlizer::urlize($this->getContractType(), '-');
     }
 
-    public function getCountryName()
-    {
-        return Intl::getRegionBundle()->getCountryName($this->country);
-    }
-
     /**
      * Set status
      *

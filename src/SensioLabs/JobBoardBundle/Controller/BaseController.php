@@ -15,15 +15,24 @@ class BaseController extends Controller
      */
     public function indexAction(Request $request)
     {
-        if ($request->isXmlHttpRequest()) {
-            $jobs = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement')->getList($request->get('page'));
+        $countryCode = $request->query->get('country-code');
+        $contractType = $request->query->get('contract-type');
+        $page = $request->query->has('page') ? $request->query->get('page') : 1;
 
+        $jobs = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement')->getAnnouncements($page, $countryCode, $contractType);
+
+        if ($request->isXmlHttpRequest()) {
             return $this->render('SensioLabsJobBoardBundle:Includes:job_container.html.twig', array('jobs' => $jobs));
         }
 
-        $jobs = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement')->getList(1);
+        $countries = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement')->getCountriesWithAnnouncement();
+        $contractTypes = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement')->getContractTypesWithAnnouncement();
 
-        return array('jobs' => $jobs);
+        return array(
+            'jobs' => $jobs,
+            'countries' => $countries,
+            'contract_types' => $contractTypes,
+        );
     }
 
     /**

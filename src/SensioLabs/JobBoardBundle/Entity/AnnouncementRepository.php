@@ -12,13 +12,55 @@ use Doctrine\ORM\EntityRepository;
  */
 class AnnouncementRepository extends EntityRepository
 {
-    public function getList($page = 1, $maxResults = 10)
+    public function getAnnouncements($page = 1, $countryCode = null, $contractType = null, $maxResults = 10)
     {
+        if ((int)$page === 0) {
+            return;
+        }
+
+        $offset = ($page - 1) * $maxResults;
+
         $qb = $this->createQueryBuilder('a')
             ->where('a.status = :status')
             ->setParameter('status', Announcement::STATUS_SAVED)
-            ->setFirstResult(($page - 1) * $maxResults)
+            ->setFirstResult($offset)
             ->setMaxResults($maxResults)
+        ;
+
+        if ($countryCode) {
+            $qb->andWhere('a.country = :country_code')
+               ->setParameter('country_code', $countryCode)
+            ;
+        }
+
+        if ($contractType) {
+            $qb->andWhere('a.contractType = :contract_type')
+               ->setParameter('contract_type', $contractType)
+            ;
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getCountriesWithAnnouncement()
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('count(c) as number, c.country')
+            ->where('c.status = :status')
+            ->setParameter('status', Announcement::STATUS_SAVED)
+            ->groupBy('c.country')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getContractTypesWithAnnouncement()
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('count(c) as number, c.contractType')
+            ->where('c.status = :status')
+            ->setParameter('status', Announcement::STATUS_SAVED)
+            ->groupBy('c.contractType')
         ;
 
         return $qb->getQuery()->getResult();

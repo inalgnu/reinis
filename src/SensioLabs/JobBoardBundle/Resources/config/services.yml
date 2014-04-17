@@ -1,8 +1,13 @@
 services:
-    sensio_labs.job_board_bundle.form.type.announcement:
+    sensiolabs.form.type.announcement:
         class: SensioLabs\JobBoardBundle\Form\Type\AnnouncementType
         tags:
             - { name: form.type, alias: announcement }
+
+    sensiolabs.twig.country_extension:
+        class: SensioLabs\JobBoardBundle\Twig\CountryExtension
+        tags:
+            - { name: twig.extension }
 
     twig.extension.text:
         class: Twig_Extensions_Extension_Text
