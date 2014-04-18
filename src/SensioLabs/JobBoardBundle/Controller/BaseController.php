@@ -15,9 +15,9 @@ class BaseController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $countryCode = $request->query->get('country-code');
-        $contractType = $request->query->get('contract-type');
-        $page = $request->query->has('page') ? $request->query->get('page') : 1;
+        $countryCode = $request->get('country-code');
+        $contractType = $request->get('contract-type');
+        $page = $request->get('page', 1);
 
         $jobs = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement')->getAnnouncements($page, $countryCode, $contractType);
 
