@@ -2,20 +2,24 @@
 
 namespace SensioLabs\JobBoardBundle\Form\Type;
 
-use SensioLabs\JobBoardBundle\Entity\Announcement;
+use SensioLabs\JobBoardBundle\Entity\Job;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class AnnouncementType extends AbstractType
+class JobType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $contractTypes = array(
-            Announcement::FULL_TIME,
-            Announcement::PART_TIME,
-            Announcement::INTERNSHIP,
-            Announcement::FREELANCE,
-            Announcement::ALTERNANCE
+            Job::FULL_TIME,
+            Job::PART_TIME,
+            Job::INTERNSHIP,
+            Job::FREELANCE,
+            Job::ALTERNANCE
         );
 
         $builder
@@ -26,17 +30,20 @@ class AnnouncementType extends AbstractType
                 'attr' => array('class' => 'location', 'placeholder' => 'City'),
                 'max_length' => 80
             ))
-            ->add('contract_type','choice', array(
+            ->add('contractType', 'choice', array(
                 'empty_value' => 'Type of contract',
                 'choices' => array_combine($contractTypes, $contractTypes)
             ))
             ->add('description', 'textarea', array('attr' => array('style' => 'width: 100%', 'rows'  => 20, 'class' => 'ckeditor')))
-            ->add('how_to_apply', 'text', array('attr' => array('placeholder' => 'Send your resume at ...')))
+            ->add('howToApply', 'text', array('attr' => array('placeholder' => 'Send your resume at ...')))
         ;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
-        return 'announcement';
+        return 'job';
     }
 }

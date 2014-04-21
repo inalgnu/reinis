@@ -1,13 +1,13 @@
 <?php
 
-namespace SensioLabs\JobBoardBundle\TestFunctional;
+namespace SensioLabs\JobBoardBundle\Test\Functional;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncementData;
+use SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadJobData;
 
-class AnnouncementTest extends WebTestCase
+class JobControllerTest extends WebTestCase
 {
     private $client;
 
@@ -41,27 +41,27 @@ class AnnouncementTest extends WebTestCase
         $crawler = $this->client->request('GET', '/post');
 
         $form = $crawler->selectButton('Preview')->form(array(
-            'announcement[title]' => 'Developer',
-            'announcement[company]' => 'SensioLabs',
-            'announcement[country]' => 'FR',
-            'announcement[city]' => 'Paris',
-            'announcement[contract_type]'=> 'Full Time',
-            'announcement[description]' => 'Some description...',
-            'announcement[how_to_apply]' => 'jobs@sensiolabs.com',
+            'job[title]' => 'Developer',
+            'job[company]' => 'SensioLabs',
+            'job[country]' => 'FR',
+            'job[city]' => 'Paris',
+            'job[contractType]'=> 'Internship',
+            'job[description]' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit',
+            'job[howToApply]' => 'jobs@sensiolabs.com',
         ));
 
         $this->client->submit($form);
 
         $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/full-time/developer/preview'));
+        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/Internship/developer/preview'));
 
         $crawler = $this->client->followRedirect();
 
         $this->assertRegExp('/Developer/', $crawler->filter('.title')->text());
         $this->assertRegExp('/SensioLabs/', $crawler->filter('.company')->text());
         $this->assertRegExp('/Paris, France/', $crawler->filter('.details')->text());
-        $this->assertRegExp('/Full Time/', $crawler->filter('.details')->text());
-        $this->assertRegExp('/Some description../', $crawler->filter('.description')->text());
+        $this->assertRegExp('/Internship/', $crawler->filter('.details')->text());
+        $this->assertRegExp('/Lorem ipsum dolor sit amet, consectetuer adipiscing elit/', $crawler->filter('.description')->text());
         $this->assertRegExp('/jobs@sensiolabs.com/', $crawler->filter('.how-to-apply')->text());
 
         // Check the pre-filled form after clicking on make changes
@@ -73,28 +73,28 @@ class AnnouncementTest extends WebTestCase
 
         $form = $crawler->selectButton('Update')->form();
 
-        $this->assertEquals('Developer', $form['announcement[title]']->getValue());
-        $this->assertEquals('SensioLabs', $form['announcement[company]']->getValue());
-        $this->assertEquals('FR', $form['announcement[country]']->getValue());
-        $this->assertEquals('Paris', $form['announcement[city]']->getValue());
-        $this->assertEquals('Full Time', $form['announcement[contract_type]']->getValue());
-        $this->assertEquals('Some description...', $form['announcement[description]']->getValue());
-        $this->assertEquals('jobs@sensiolabs.com', $form['announcement[how_to_apply]']->getValue());
+        $this->assertEquals('Developer', $form['job[title]']->getValue());
+        $this->assertEquals('SensioLabs', $form['job[company]']->getValue());
+        $this->assertEquals('FR', $form['job[country]']->getValue());
+        $this->assertEquals('Paris', $form['job[city]']->getValue());
+        $this->assertEquals('Internship', $form['job[contractType]']->getValue());
+        $this->assertEquals('Lorem ipsum dolor sit amet, consectetuer adipiscing elit', $form['job[description]']->getValue());
+        $this->assertEquals('jobs@sensiolabs.com', $form['job[howToApply]']->getValue());
 
         // Update the title and check if the route parameter is correct
-        $form['announcement[title]'] = 'Developer 2';
+        $form['job[title]'] = 'Developer 2';
 
         $this->client->submit($form);
 
         $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/full-time/developer-2/preview'));
+        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/Internship/developer-2/preview'));
 
         $crawler = $this->client->followRedirect();
 
         $this->assertRegExp('/Developer 2/', $crawler->filter('.title')->text());
     }
 
-    public function testAnnouncementList()
+    public function testJobList()
     {
         $this->loadFixtures();
 
@@ -105,7 +105,7 @@ class AnnouncementTest extends WebTestCase
         $this->assertCount(10, $crawler->filter('.box'));
     }
 
-    public function testAnnouncementListAjaxCall()
+    public function testJobListAjaxCall()
     {
         $this->loadFixtures();
 
@@ -121,7 +121,7 @@ class AnnouncementTest extends WebTestCase
 
     protected function loadFixtures()
     {
-        $fixture = new LoadAnnouncementData();
+        $fixture = new LoadJobData();
         $fixture->load($this->client->getContainer()->get('doctrine')->getManager());
     }
 }

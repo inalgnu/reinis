@@ -23,3 +23,5 @@ parameters:
     sensiolabs_connect.oauth_endpoint: https://connect.sensiolabs.com
     sensiolabs_connect.api_endpoint: https://connect.sensiolabs.com/api
     sensiolabs_connect.sln_js: https://connect.sensiolabs.com/sln.js
+
+    sensio_labs_job_board.max_per_page: 10

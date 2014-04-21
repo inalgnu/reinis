@@ -5,7 +5,7 @@
         {% endblock %}
 
         {% block job_description %}
-            <div class="padding description">{{ job.description|truncate(420)|purify }}</div>
+            <div class="padding description">{{ job.description|truncate(420, true)|purify }}</div>
         {% endblock %}
 
         {% block job_apply %}

@@ -10,7 +10,7 @@ casper.test.begin('Announcement list - Infinite scroll tests', 9, function(test)
 
     casper.then(function() {
         test.info('Then we scroll down and we see 10 more announcements:')
-        this.scrollTo(0, 2000);
+        this.scrollToBottom();
         this.wait(1000, function() {
             test.assertElementCount('.box', 20);
         });
@@ -21,7 +21,7 @@ casper.test.begin('Announcement list - Infinite scroll tests', 9, function(test)
         this.test.assertSelectorHasText('#left > div:nth-child(1) > ul > li:nth-child(2) > a', 'France (20)');
     });
 
-    casper.thenClick('#left > div:nth-child(1) > ul > li:nth-child(2) > a');
+    casper.thenClick('a[href*="?country=FR"]');
 
     casper.then(function() {
         test.info('We click on "France (20)" link, he become active:');
@@ -35,7 +35,7 @@ casper.test.begin('Announcement list - Infinite scroll tests', 9, function(test)
         this.test.assertSelectorHasText('#left > div:nth-child(2) > ul > li:nth-child(2) > a', 'Full Time (30)');
     });
 
-    casper.thenClick('#left > div:nth-child(2) > ul > li:nth-child(2) > a');
+    casper.thenClick('a[href*="?country=FR&contract-type=Full+Time"]');
 
     casper.then(function() {
         test.info('We click on "Full Time (30)" link, he become active:');
@@ -46,7 +46,7 @@ casper.test.begin('Announcement list - Infinite scroll tests', 9, function(test)
 
     casper.then(function() {
         test.info('Then we scroll down and we see 10 more announcements:');
-        this.scrollTo(0, 2000);
+        this.scrollToBottom();
         this.wait(1000, function() {
             test.assertElementCount('.box', 20);
         });

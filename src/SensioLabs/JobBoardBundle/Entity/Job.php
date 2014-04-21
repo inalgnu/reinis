@@ -3,25 +3,25 @@
 namespace SensioLabs\JobBoardBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Intl\Intl;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util as Sluggable;
 use SensioLabs\JobBoardBundle\Exception\InvalidStatusUpdateException;
 
 /**
- * Announcement
+ * Job
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="SensioLabs\JobBoardBundle\Entity\AnnouncementRepository")
+ * @ORM\Entity(repositoryClass="SensioLabs\JobBoardBundle\Repository\JobRepository")
  */
-class Announcement
+class Job
 {
     const FULL_TIME = 'Full Time';
     const PART_TIME = 'Part Time';
     const INTERNSHIP = 'Internship';
     const FREELANCE = 'Freelance';
     const ALTERNANCE = 'Alternance';
+
     const STATUS_SAVED = 'Saved';
 
     /**
@@ -47,9 +47,9 @@ class Announcement
      *
      * @Gedmo\Slug(fields={"title"})
      *
-     * @ORM\Column(name="title_slug", length=128, unique=true)
+     * @ORM\Column(name="slug", length=128, unique=true)
      */
-    private $titleSlug;
+    private $slug;
 
     /**
      * @var string
@@ -92,7 +92,8 @@ class Announcement
      *
      * @ORM\Column(name="description", type="text")
      *
-     * @Assert\NotBlank(message="Your job offer must be longer")
+     * @Assert\NotBlank(message="Job description should not be empty")
+     * @Assert\Length(min = "20", minMessage = "Job description must be longer")
      */
     private $description;
 
@@ -132,7 +133,7 @@ class Announcement
      * Set title
      *
      * @param string $title
-     * @return Announcement
+     * @return Job
      */
     public function setTitle($title)
     {
@@ -155,7 +156,7 @@ class Announcement
      * Set company
      *
      * @param string $company
-     * @return Announcement
+     * @return Job
      */
     public function setCompany($company)
     {
@@ -178,7 +179,7 @@ class Announcement
      * Set country
      *
      * @param string $country
-     * @return Announcement
+     * @return Job
      */
     public function setCountry($country)
     {
@@ -201,7 +202,7 @@ class Announcement
      * Set city
      *
      * @param string $city
-     * @return Announcement
+     * @return Job
      */
     public function setCity($city)
     {
@@ -224,7 +225,7 @@ class Announcement
      * Set contractType
      *
      * @param string $contractType
-     * @return Announcement
+     * @return Job
      */
     public function setContractType($contractType)
     {
@@ -247,7 +248,7 @@ class Announcement
      * Set description
      *
      * @param string $description
-     * @return Announcement
+     * @return Job
      */
     public function setDescription($description)
     {
@@ -270,7 +271,7 @@ class Announcement
      * Set howToApply
      *
      * @param string $howToApply
-     * @return Announcement
+     * @return Job
      */
     public function setHowToApply($howToApply)
     {
@@ -294,21 +295,16 @@ class Announcement
      *
      * @return string
      */
-    public function getTitleSlug()
+    public function getSlug()
     {
-        return $this->titleSlug;
-    }
-
-    public function getContractTypeSlug()
-    {
-        return Sluggable\Urlizer::urlize($this->getContractType(), '-');
+        return $this->slug;
     }
 
     /**
      * Set status
      *
      * @param integer $status
-     * @return Announcement
+     * @return Job
      */
     public function setStatus($status)
     {

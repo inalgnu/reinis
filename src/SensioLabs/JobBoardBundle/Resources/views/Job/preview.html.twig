@@ -9,7 +9,7 @@
 {% block content %}
     {{ breadcrumb({
         'Post a job': path('job_post'),
-        'Preview':  path('job_preview', {'country_code': job.country, 'contract_type_slug': job.contracttypeslug, 'title_slug': job.titleslug}),
+        'Preview': path('job_preview', {'country_code': job.country, 'contract_type': job.contractType, 'slug': job.slug})
     }) }}
 
     {% embed 'SensioLabsJobBoardBundle:Includes:job.html.twig' %}

@@ -4571,8 +4571,9 @@ nav.menu a {
 .box .details .filter a:hover {
     text-decoration: underline;
 }
-.box .details .archived {
-    color:#585858;
+.box .details .archived, .box .details .created {
+    font-size: 12px;
+    color: #8b95a2;
     font-weight: normal;
 }
 .box .title {

@@ -7,10 +7,108 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use SensioLabs\JobBoardBundle\Entity\Announcement;
+use SensioLabs\JobBoardBundle\Entity\Job;
 
 class JobController extends Controller
 {
+    /**
+     * @Route("/", name="homepage")
+     * @Template()
+     */
+    public function indexAction(Request $request)
+    {
+        $country = $request->query->get('country');
+        $contractType = $request->query->get('contract-type');
+        $page = $request->query->get('page', 1);
+        $maxPerPage = $this->container->getParameter('sensio_labs_job_board.max_per_page');
+
+        $jobs = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Job')->getJobs($page, $country, $contractType, $maxPerPage);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('SensioLabsJobBoardBundle:Includes:job_container.html.twig', array('jobs' => $jobs));
+        }
+
+        $countries = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Job')->getCountriesWithJob();
+        $contractTypes = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Job')->getContractTypesWithJob();
+
+        return array(
+            'jobs' => $jobs,
+            'countries' => $countries,
+            'contract_types' => $contractTypes,
+        );
+    }
+
+    /**
+     * @Route("/{country_code}/{contract_type}/{slug}/preview", name="job_preview")
+     * @Template()
+     */
+    public function previewAction($slug)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneBy(array('slug' => $slug));
+
+        if (!$job) {
+           throw $this->createNotFoundException(sprintf('Unable to find job with slug %s', $slug));
+        }
+
+        return array('job' => $job);
+    }
+
+    /**
+     * @Route("/post", name="job_post")
+     * @Template()
+     */
+    public function postAction(Request $request)
+    {
+        $job = $this->getJob();
+
+        $form = $this->createForm('job', $job);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $job->backup();
+
+            $em->persist($job);
+            $em->flush();
+
+            $session = $request->getSession();
+            $session->set('jobId', $job->getId());
+
+            return $this->redirect($this->generateUrl('job_preview', array(
+                'country_code' => $job->getCountry(),
+                'contract_type' => $job->getContractType(),
+                'slug' => $job->getSlug(),
+            )));
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @return Job
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    private function getJob()
+    {
+        if ($id = $this->get('session')->get('jobId')) {
+            $em = $this->getDoctrine()->getManager();
+            $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneById($id);
+
+            if (!$job) {
+                if ($this->get('session')->has('jobId')) {
+                    $this->get('session')->remove('jobId');
+                }
+
+                throw $this->createNotFoundException(sprintf('Unable to find job with id %s', $id));
+            }
+
+            return $job;
+        }
+
+        return new Job();
+    }
+
     /**
      * @Route("/show", name="job_show")
      * @Template()
@@ -21,92 +119,11 @@ class JobController extends Controller
     }
 
     /**
-     * @Route("/{country_code}/{contract_type_slug}/{title_slug}/preview", name="job_preview")
+     * @Route("/manage", name="manage")
      * @Template()
      */
-    public function previewAction(Request $request)
+    public function manageAction()
     {
-        $titleSlug = $request->attributes->get('title_slug');
-
-        $em = $this->getDoctrine()->getManager();
-        $announcement = $em->getRepository('SensioLabsJobBoardBundle:Announcement')->findOneBy(array('titleSlug' => $titleSlug));
-
-        if (!$announcement) {
-           throw $this->createNotFoundException(sprintf('Unable to find announcement with titleSlug %s', $titleSlug));
-        }
-
-        return array('job' => $announcement);
-    }
-
-    /**
-     * @Route("/post", name="job_post")
-     * @Method({"GET"})
-     * @Template()
-     */
-    public function postAction()
-    {
-        $form = $this->createForm('announcement', $this->getAnnouncement(), array(
-            'action' => $this->generateUrl('job_post_save'),
-            'method' => 'POST'
-        ));
-
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @Route("/post", name="job_post_save")
-     * @Method({"POST"})
-     * @Template("SensioLabsJobBoardBundle:Job:post.html.twig")
-     */
-    public function savePostAction(Request $request)
-    {
-        $announcement = $this->getAnnouncement();
-
-        $form = $this->createForm('announcement', $announcement);
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-
-            $announcement->backup();
-
-            $em->persist($announcement);
-            $em->flush();
-
-            $this->get('session')->set('announcement_id', $announcement->getId());
-
-            return $this->redirect($this->generateUrl('job_preview', array(
-                'country_code' => $announcement->getCountry(),
-                'contract_type_slug' => $announcement->getContractTypeSlug(),
-                'title_slug' => $announcement->getTitleSlug()
-            )));
-        }
-
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @return Announcement
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
-    private function getAnnouncement()
-    {
-        if ($id = $this->get('session')->get('announcement_id')) {
-            $em = $this->getDoctrine()->getManager();
-            $announcement = $em->getRepository('SensioLabsJobBoardBundle:Announcement')->findOneById($id);
-
-            if (!$announcement) {
-                if ($this->get('session')->has('announcement_id')) {
-                    $this->get('session')->remove('announcement_id');
-                }
-
-                throw $this->createNotFoundException(sprintf('Unable to find announcement with id %s', $id));
-            }
-
-            return $announcement;
-        }
-
-        return new Announcement();
+        return array();
     }
 }

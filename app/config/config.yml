@@ -26,8 +26,6 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
-    globals:
-        sln_js:       "%sensiolabs_connect.sln_js%"
 
 # Assetic Configuration
 assetic:
@@ -73,3 +71,6 @@ stof_doctrine_extensions:
         default:
             sluggable: true
             timestampable: true
+
+sensio_labs_job_board:
+    max_per_page: %sensio_labs_job_board.max_per_page%
