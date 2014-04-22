@@ -2,6 +2,8 @@
 
 namespace SensioLabs\JobBoardBundle\Entity;
 
+use FOS\UserBundle\Model\User;
+use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -11,7 +13,7 @@ use SensioLabs\JobBoardBundle\Exception\InvalidStatusUpdateException;
 /**
  * Job
  *
- * @ORM\Table()
+ * @ORM\Table(name="sl_job")
  * @ORM\Entity(repositoryClass="SensioLabs\JobBoardBundle\Repository\JobRepository")
  */
 class Job
@@ -118,6 +120,11 @@ class Job
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     */
+    private $user;
 
     /**
      * Get id
@@ -361,5 +368,21 @@ class Job
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser(UserInterface $user)
+    {
+        $this->user = $user;
     }
 }

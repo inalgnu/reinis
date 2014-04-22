@@ -22,7 +22,6 @@ casper.test.begin('Announcement list - Infinite scroll tests', 9, function(test)
     });
 
     casper.thenClick('a[href*="?country=FR"]');
-
     casper.then(function() {
         test.info('We click on "France (20)" link, he become active:');
         this.test.assertSelectorHasText('#left > div:nth-child(1) > ul > li.active > a', 'France (20)');
@@ -36,7 +35,6 @@ casper.test.begin('Announcement list - Infinite scroll tests', 9, function(test)
     });
 
     casper.thenClick('a[href*="?country=FR&contract-type=Full+Time"]');
-
     casper.then(function() {
         test.info('We click on "Full Time (30)" link, he become active:');
         this.test.assertSelectorHasText('#left > div:nth-child(2) > ul > li.active > a', 'Full Time (30)');

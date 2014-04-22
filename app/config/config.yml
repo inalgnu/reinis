@@ -74,3 +74,8 @@ stof_doctrine_extensions:
 
 sensio_labs_job_board:
     max_per_page: %sensio_labs_job_board.max_per_page%
+
+fos_user:
+    db_driver: orm
+    firewall_name: secured_area
+    user_class: SensioLabs\JobBoardBundle\Entity\User

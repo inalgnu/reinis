@@ -73,6 +73,10 @@ class JobController extends Controller
             $em = $this->getDoctrine()->getManager();
             $job->backup();
 
+            if ($this->get('security.context')->isGranted('ROLE_USER')) {
+                $job->setUser($this->getUser());
+            }
+
             $em->persist($job);
             $em->flush();
 
