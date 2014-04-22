@@ -18,7 +18,7 @@
     {% endif %}
 
     <div class="box" style="padding-bottom:15px">
-        <form action="{{ path('job_post') }}" method="post" {% if app.debug %}novalidate="true"{% endif %}>
+        {{ form_start(form, {'action': path('job_post'), 'method': 'POST'}) }}
             <div class="padding">
                 <div class="head clearfix">
 
@@ -79,7 +79,7 @@
                 </button>
             </div>
             {{ form_rest(form) }}
-       </form>
+       {{ form_end(form) }}
     </div>
 
     <div class="clear"></div>

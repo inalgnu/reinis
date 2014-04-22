@@ -60,7 +60,11 @@ class JobController extends Controller
      */
     public function postAction(Request $request)
     {
-        $job = $this->getJob();
+        $jobManager = $this->container->get('sensiolabs.manager.job');
+
+        if (!$job = $jobManager->getJobFromSession($request->getSession())) {
+            $job = new Job();
+        }
 
         $form = $this->createForm('job', $job);
         $form->handleRequest($request);
@@ -83,30 +87,6 @@ class JobController extends Controller
         }
 
         return array('form' => $form->createView());
-    }
-
-    /**
-     * @return Job
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
-    private function getJob()
-    {
-        if ($id = $this->get('session')->get('jobId')) {
-            $em = $this->getDoctrine()->getManager();
-            $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneById($id);
-
-            if (!$job) {
-                if ($this->get('session')->has('jobId')) {
-                    $this->get('session')->remove('jobId');
-                }
-
-                throw $this->createNotFoundException(sprintf('Unable to find job with id %s', $id));
-            }
-
-            return $job;
-        }
-
-        return new Job();
     }
 
     /**

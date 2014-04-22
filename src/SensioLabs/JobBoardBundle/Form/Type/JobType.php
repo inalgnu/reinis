@@ -35,7 +35,7 @@ class JobType extends AbstractType
                 'choices' => array_combine($contractTypes, $contractTypes)
             ))
             ->add('description', 'textarea', array('attr' => array('style' => 'width: 100%', 'rows'  => 20, 'class' => 'ckeditor')))
-            ->add('howToApply', 'text', array('attr' => array('placeholder' => 'Send your resume at ...')))
+            ->add('howToApply', 'text', array('attr' => array('placeholder' => 'Send your resume at ...'), 'required' => false))
         ;
     }
 
