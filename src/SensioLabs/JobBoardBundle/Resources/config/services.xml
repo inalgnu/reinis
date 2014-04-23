@@ -5,20 +5,16 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="sensiolabs.form.type.job"
-                 class="SensioLabs\JobBoardBundle\Form\Type\JobType">
+        <service id="sensiolabs.form.type.job" class="SensioLabs\JobBoardBundle\Form\Type\JobType">
             <tag name="form.type" alias="job" />
         </service>
-        <service id="twig.extension.text"
-                 class="Twig_Extensions_Extension_Text">
+        <service id="twig.extension.text" class="Twig_Extensions_Extension_Text">
             <tag name="twig.extension" />
         </service>
-        <service id="sensiolabs.twig.country_extension"
-                 class="SensioLabs\JobBoardBundle\Twig\CountryExtension">
+        <service id="sensiolabs.twig.country_extension" class="SensioLabs\JobBoardBundle\Twig\CountryExtension">
             <tag name="twig.extension" />
         </service>
-        <service id="sensiolabs.manager.job"
-                 class="SensioLabs\JobBoardBundle\Manager\JobManager">
+        <service id="sensiolabs.manager.job" class="SensioLabs\JobBoardBundle\Manager\JobManager">
             <argument type="service" id="doctrine" />
         </service>
     </services>

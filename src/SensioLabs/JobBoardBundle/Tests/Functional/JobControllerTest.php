@@ -16,7 +16,7 @@ class JobControllerTest extends WebTestCase
         $this->client = static::createClient();
 
         $purger = new ORMPurger($this->client->getContainer()->get('doctrine.orm.entity_manager'));
-        $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
+        $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
         $purger->purge();
     }
 

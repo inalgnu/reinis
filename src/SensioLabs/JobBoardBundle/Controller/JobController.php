@@ -22,19 +22,17 @@ class JobController extends Controller
         $page = $request->query->get('page', 1);
         $maxPerPage = $this->container->getParameter('sensio_labs_job_board.max_per_page');
 
-        $jobs = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Job')->getJobs($page, $country, $contractType, $maxPerPage);
+        $jobRepository =  $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Job');
+        $jobs = $jobRepository->getJobs($page, $country, $contractType, $maxPerPage);
 
         if ($request->isXmlHttpRequest()) {
             return $this->render('SensioLabsJobBoardBundle:Includes:job_container.html.twig', array('jobs' => $jobs));
         }
 
-        $countries = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Job')->getCountriesWithJob();
-        $contractTypes = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Job')->getContractTypesWithJob();
-
         return array(
             'jobs' => $jobs,
-            'countries' => $countries,
-            'contract_types' => $contractTypes,
+            'countries' => $jobRepository->getCountriesWithJob(),
+            'contract_types' => $jobRepository->getContractTypesWithJob(),
         );
     }
 

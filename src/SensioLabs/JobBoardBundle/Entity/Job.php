@@ -2,7 +2,6 @@
 
 namespace SensioLabs\JobBoardBundle\Entity;
 
-use FOS\UserBundle\Model\User;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;

@@ -6,7 +6,6 @@ use SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadUserData;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadJobData;
 
 class UserTest extends WebTestCase
 {
@@ -17,7 +16,7 @@ class UserTest extends WebTestCase
         $this->client = static::createClient();
 
         $purger = new ORMPurger($this->client->getContainer()->get('doctrine.orm.entity_manager'));
-        $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
+        $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
         $purger->purge();
     }
 
@@ -26,17 +25,16 @@ class UserTest extends WebTestCase
         $this->client = null;
     }
 
-
     public function testFormSubmissionAndRedirection()
     {
         $this->loadFixtures();
 
-        $crawler = $this->client->request('GET', '/manage');
+        $this->client->request('GET', '/manage');
 
         $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
 
-        $form = $crawler->selectButton('security.login.submit')->form(array(
+        $form = $crawler->selectButton('Login')->form(array(
             '_username' => 'skigun',
             '_password' => 'password',
         ));
@@ -47,8 +45,6 @@ class UserTest extends WebTestCase
 
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
-
-
 
     protected function loadFixtures()
     {
