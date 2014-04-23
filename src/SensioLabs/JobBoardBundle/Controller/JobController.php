@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use SensioLabs\JobBoardBundle\Entity\Job;
 
 class JobController extends Controller
@@ -68,18 +69,12 @@ class JobController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $job->backup();
-
-            if ($this->get('security.context')->isGranted('ROLE_USER')) {
-                $job->setUser($this->getUser());
+            if (null === $job->getStatus()) {
+                $jobManager->createJob($job);
+                $jobManager->setJobIdInSession($request->getSession(), $job->getId());
+            } else {
+                $jobManager->updateJob($job);
             }
-
-            $em->persist($job);
-            $em->flush();
-
-            $session = $request->getSession();
-            $session->set('jobId', $job->getId());
 
             return $this->redirect($this->generateUrl('job_preview', array(
                 'country_code' => $job->getCountry(),
@@ -89,6 +84,28 @@ class JobController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @Route("/{country_code}/{contract_type}/{slug}/update", name="job_update")
+     * @Security("has_role('ROLE_USER')")
+     * @Template("SensioLabsJobBoardBundle:Job:post.html.twig")
+     */
+    public function updateAction(Request $request, $slug)
+    {
+        $user = $this->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneBy(array('slug' => $slug));
+
+        if (!$job || $user !== $job->getUser()) {
+            throw $this->createNotFoundException(sprintf('Unable to find job with slug %s', $slug));
+        }
+
+        $this->container->get('sensiolabs.manager.job')->setJobInSession($request, $job);
+        $form = $this->createForm('job', $job);
+
+        return array('form' =>  $form->createView());
     }
 
     /**

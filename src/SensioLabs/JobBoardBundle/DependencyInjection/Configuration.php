@@ -21,6 +21,15 @@ class Configuration implements ConfigurationInterface
                     ->info('The maximum number of jobs displayed per page')
                     ->defaultValue(10)
                 ->end()
+                ->scalarNode('admin_email')
+                    ->info('The email address of the administrator')
+                    ->isRequired()
+                    ->validate()
+                    ->ifTrue(function ($s) {
+                        return preg_match('#^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$#', $s) !== 1;
+                    })
+                    ->thenInvalid('Invalid email')
+                ->end()
             ->end();
 
         return $treeBuilder;

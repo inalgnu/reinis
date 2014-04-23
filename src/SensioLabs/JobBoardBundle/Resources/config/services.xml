@@ -15,7 +15,11 @@
             <tag name="twig.extension" />
         </service>
         <service id="sensiolabs.manager.job" class="SensioLabs\JobBoardBundle\Manager\JobManager">
-            <argument type="service" id="doctrine" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="security.context" />
+            <argument type="service" id="mailer" />
+            <argument type="service" id="templating" />
+            <argument>%sensio_labs_job_board.admin_email%</argument>
         </service>
     </services>
 </container>

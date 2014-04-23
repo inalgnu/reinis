@@ -2,7 +2,7 @@
 
 namespace SensioLabs\JobBoardBundle\Entity;
 
-use FOS\UserBundle\Model\UserInterface;
+use SensioLabs\JobBoardBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -23,7 +23,8 @@ class Job
     const FREELANCE = 'Freelance';
     const ALTERNANCE = 'Alternance';
 
-    const STATUS_SAVED = 'Saved';
+    const STATUS_NEW = 'New';
+    const STATUS_PUBLISHED = 'Published';
 
     /**
      * @var integer
@@ -329,34 +330,9 @@ class Job
         return $this->status;
     }
 
-    public function isSaved()
+    public function isNew()
     {
-        if ($this->status === self::STATUS_SAVED)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Set the status to saved
-     *
-     * @throws InvalidStatusUpdateException
-     */
-    public function backup()
-    {
-        if ($this->isSaved()) {
-            return;
-        }
-
-        if ($this->status === null) {
-            $this->status = self::STATUS_SAVED;
-
-            return;
-        }
-
-        throw new InvalidStatusUpdateException(sprintf('Entity status cannot pass from %s to %s', $this->status, self::STATUS_SAVED));
+        return $this->status === self::STATUS_NEW;
     }
 
     /**
@@ -380,8 +356,13 @@ class Job
     /**
      * @param mixed $user
      */
-    public function setUser(UserInterface $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
+    }
+
+    public function isPublished()
+    {
+        return $this->status === self::STATUS_PUBLISHED;
     }
 }

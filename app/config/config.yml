@@ -74,6 +74,7 @@ stof_doctrine_extensions:
 
 sensio_labs_job_board:
     max_per_page: %sensio_labs_job_board.max_per_page%
+    admin_email: %sensio_labs_job_board.admin_email%
 
 fos_user:
     db_driver: orm

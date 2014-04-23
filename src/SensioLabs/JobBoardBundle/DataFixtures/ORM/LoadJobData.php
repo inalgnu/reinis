@@ -29,7 +29,7 @@ class LoadJobData implements FixtureInterface
                 )
                 ->setContractType('Full Time')
                 ->setHowToApply('jobs@sensiolabs.com')
-                ->setStatus(Job::STATUS_SAVED)
+                ->setStatus(Job::STATUS_NEW)
             ;
 
             if ($i > 20) {
