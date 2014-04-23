@@ -44,7 +44,7 @@ class JobController extends Controller
     public function previewAction($slug)
     {
         $em = $this->getDoctrine()->getManager();
-        $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneBy(array('slug' => $slug));
+        $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneBySlug($slug);
 
         if (!$job) {
            throw $this->createNotFoundException(sprintf('Unable to find job with slug %s', $slug));
@@ -109,12 +109,19 @@ class JobController extends Controller
     }
 
     /**
-     * @Route("/show", name="job_show")
+     * @Route("/{country_code}/{contract_type}/{slug}", name="job_show", requirements={"country_code"= "[A-Z]{2}" } )
      * @Template()
      */
-    public function showAction()
+    public function showAction($slug)
     {
-        return array();
+        $em = $this->getDoctrine()->getManager();
+        $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneBySlug($slug);
+
+        if (!$job) {
+            throw $this->createNotFoundException(sprintf('Unable to find job with slug %s', $slug));
+        }
+
+        return array('job' => $job);
     }
 
     /**

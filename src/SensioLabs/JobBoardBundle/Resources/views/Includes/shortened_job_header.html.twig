@@ -7,7 +7,7 @@
     </span>
 </div>
 
-<a href="{{ path('job_show') }}" class="title">
+<a href="{{ path('job_show', {'country_code': job.country, 'contract_type': job.contractType, 'slug': job.slug}) }}" class="title">
     {{ job.title }}
     <span class="company">@&nbsp;{{ job.company }}</span>
 </a>

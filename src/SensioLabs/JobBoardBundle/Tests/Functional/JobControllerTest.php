@@ -119,6 +119,22 @@ class JobControllerTest extends WebTestCase
         $this->assertCount(10, $crawler->filter('.box'));
     }
 
+    public function testJobShow()
+    {
+        $this->loadFixtures();
+        $crawler = $this->client->request('GET', '/');
+        $link = $crawler->selectLink('Developer 1')->link();
+        $crawler = $this->client->click($link);
+
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertRegExp('/Developer 1/', $crawler->filter('.title')->text());
+        $this->assertRegExp('/SensioLabs/', $crawler->filter('.company')->text());
+        $this->assertRegExp('/Paris, France/', $crawler->filter('.details')->text());
+        $this->assertRegExp('/Full Time/', $crawler->filter('.details')->text());
+        $this->assertRegExp('/Lorem ipsum dolor sit amet, consectetur adipisicing elit/', $crawler->filter('.description')->text());
+        $this->assertRegExp('/jobs@sensiolabs.com/', $crawler->filter('.how-to-apply')->text());
+    }
+
     protected function loadFixtures()
     {
         $fixture = new LoadJobData();
