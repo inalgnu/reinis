@@ -6,6 +6,8 @@
 
 {% block title 'My jobs' %}
 
+{% import "SensioLabsJobBoardBundle:Includes:pagination.html.twig" as pagination %}
+
 {% block content %}
     {{ breadcrumb({
         ('My Jobs'): path('manage'),
@@ -26,19 +28,36 @@
                     </tr>
                     </thead>
                     <tbody>
+                    {% if pager.getNbResults > 0 %}
+                        {% for job in pager %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('job_preview', {'country_code': job.country, 'contract_type': job.contractType, 'slug': job.slug}) }}">
+                                        {{ job.contractType }} in {{ job.city }} &mdash; {{ job.title }}
+                                    </a>
+                                </td>
 
-                    <tr><td colspan="5"> You have no jobs. </td></tr>
+                                <td style="color:orange"> {% if job.getTimeLeft %}{{ job.getTimeLeft }}{% else %}Not online yet{% endif %}</td>
 
+                                <td> {{ getTotalViewCount('job', job.id) }} </td>
+
+                                <td class="action">
+                                    <a href="{{ path('job_publish', {'id': job.id}) }}"> Publish </a> /
+
+                                    <a href="{{ path('job_update', {'country_code': job.country, 'contract_type': job.contractType, 'slug': job.slug}) }}"> Make changes </a> /
+
+                                    <a href="{{ path('job_delete', {'id': job.id}) }}"> Delete </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="5"> You have no jobs. </td></tr>
+                    {% endif %}
                     </tbody>
                 </table>
-                <div class="smallpagination right">
-                    <a href="#" class="left-icon"><img class="sprite-icon-green-arrow-left" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="<" /></a>
 
-                    <a href="#" class="active">1</a>
-                    <a href="#">2</a>
+                {{ pagination.paginate('manage', pager) }}
 
-                    <a href="#" class="right-icon"><img class="sprite-icon-green-arrow-right" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt=">" /></a>
-                </div>
                 <div class="clear"></div>
             </div>
         {% endblock%}

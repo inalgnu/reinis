@@ -3,6 +3,7 @@
 namespace SensioLabs\JobBoardBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use FOS\UserBundle\Model\UserInterface;
 use SensioLabs\JobBoardBundle\Entity\Job;
 
 /**
@@ -51,6 +52,19 @@ class JobRepository extends EntityRepository
     }
 
     /**
+     * @return \Doctrine\ORM\Query
+     */
+    public function getByUserQuery(UserInterface $user)
+    {
+        $qb = $this->createQueryBuilder('j')
+            ->where('j.user = :user')
+            ->setParameter('user', $user)
+        ;
+
+        return $qb->getQuery();
+    }
+
+    /**
      * @return array
      */
     public function getCountriesWithJob()
@@ -83,16 +97,15 @@ class JobRepository extends EntityRepository
     public function getRandomJob()
     {
         $em = $this->getEntityManager();
-        $max = $em->createQuery('SELECT MAX(q.id) FROM SensioLabsJobBoardBundle:Job q')
-            ->getSingleScalarResult();
+        $min = $em->createQuery('SELECT MIN(q.id) FROM SensioLabsJobBoardBundle:Job q')->getSingleScalarResult();
+        $max = $em->createQuery('SELECT MAX(q.id) FROM SensioLabsJobBoardBundle:Job q')->getSingleScalarResult();
 
-        return $em->createQuery('
-                SELECT q FROM SensioLabsJobBoardBundle:Job q
-                WHERE q.id >= :rand
-                ORDER BY q.id ASC
-            ')
-            ->setParameter('rand', rand(0, $max))
+        $query = $em->createQuery('SELECT q FROM SensioLabsJobBoardBundle:Job q WHERE q.id >= :rand ORDER BY q.id ASC')
+            ->setParameter('rand', rand($min, $max))
             ->setMaxResults(1)
-            ->getSingleResult();
+            ->getSingleResult()
+        ;
+
+        return $query;
     }
 }

@@ -1,0 +1,17 @@
+{% macro paginate(route, pager) %}
+    <div class="smallpagination right">
+        <a href="{% if pager.hasPreviousPage %}{{ path(route, {'page': pager.getPreviousPage}) }}{% endif %}" class="left-icon">
+            <img class="sprite-icon-green-arrow-left" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="<" />
+        </a>
+
+        {% for page in range(1, pager.getNbPages) %}
+            <a href="{{ path(route, {'page': page}) }}" {% if pager.getCurrentPage == page %}class="active"{% endif %}>
+                {{ page }}
+            </a>
+        {% endfor %}
+
+        <a href="{% if pager.hasNextPage %}{{ path(route, {'page': pager.getNextPage}) }}{% endif %}" class="right-icon">
+            <img class="sprite-icon-green-arrow-right" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt=">" />
+        </a>
+    </div>
+{% endmacro %}

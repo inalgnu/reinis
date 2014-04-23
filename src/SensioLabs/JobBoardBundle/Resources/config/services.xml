@@ -14,6 +14,10 @@
         <service id="sensiolabs.twig.country_extension" class="SensioLabs\JobBoardBundle\Twig\CountryExtension">
             <tag name="twig.extension" />
         </service>
+        <service id="sensiolabs.twig.view_count_extension" class="SensioLabs\JobBoardBundle\Twig\ViewCountExtension">
+            <argument type="service" id="sensiolabs.service.view_counter" />
+            <tag name="twig.extension" />
+        </service>
         <service id="sensiolabs.manager.job" class="SensioLabs\JobBoardBundle\Manager\JobManager">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="security.context" />

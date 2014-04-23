@@ -2,11 +2,12 @@
 
 namespace SensioLabs\JobBoardBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use SensioLabs\JobBoardBundle\Entity\Job;
 
-class LoadJobData implements FixtureInterface
+class LoadJobData extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
      * {@inheritDoc}
@@ -30,6 +31,7 @@ class LoadJobData implements FixtureInterface
                 ->setContractType('Full Time')
                 ->setHowToApply('jobs@sensiolabs.com')
                 ->setStatus(Job::STATUS_PUBLISHED)
+                ->setUser($this->getReference('user-1'))
             ;
 
             if ($i > 20) {
@@ -47,5 +49,10 @@ class LoadJobData implements FixtureInterface
         }
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 2;
     }
 }

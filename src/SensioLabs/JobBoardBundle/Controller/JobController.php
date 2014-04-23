@@ -4,13 +4,19 @@ namespace SensioLabs\JobBoardBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Intl\Intl;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use SensioLabs\JobBoardBundle\Entity\Job;
-use Symfony\Component\Intl\Intl;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Exception\NotValidCurrentPageException;
+use Pagerfanta\Pagerfanta;
 
 class JobController extends Controller
 {
@@ -23,7 +29,7 @@ class JobController extends Controller
         $country = $request->query->get('country');
         $contractType = $request->query->get('contract-type');
         $page = $request->query->get('page', 1);
-        $maxPerPage = $this->container->getParameter('sensio_labs_job_board.max_per_page');
+        $maxPerPage = $this->container->getParameter('sensio_labs_job_board.max_per_page.homepage');
 
         $jobRepository = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Job');
         $jobs = $jobRepository->getJobs($page, $country, $contractType, $maxPerPage);
@@ -109,7 +115,7 @@ class JobController extends Controller
             throw $this->createNotFoundException(sprintf('Unable to find job with slug %s', $slug));
         }
 
-        $this->container->get('sensiolabs.manager.job')->setJobInSession($request, $job);
+        $this->container->get('sensiolabs.manager.job')->setJobIdInSession($request->getSession(), $job);
         $form = $this->createForm('job', $job);
 
         return array('form' =>  $form->createView());
@@ -119,7 +125,7 @@ class JobController extends Controller
      * @Route("/{country_code}/{contract_type}/{slug}", name="job_show", requirements={"country_code"= "[A-Z]{2}" } )
      * @Template()
      */
-    public function showAction($slug)
+    public function showAction(Request $request, $slug)
     {
         $em = $this->getDoctrine()->getManager();
         $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneBySlug($slug);
@@ -128,22 +134,41 @@ class JobController extends Controller
             throw $this->createNotFoundException(sprintf('Unable to find job with slug %s', $slug));
         }
 
+        $viewCounter = $this->container->get('sensiolabs.service.view_counter');
+        $viewCounter->incrementViewForRoute('job', $job->getId(), $request->attributes->get('_route'));
+
         return array('job' => $job);
     }
 
     /**
-     * @Route("/manage", name="manage")
+     * @Route("/manage/{page}", name="manage", defaults={"page" = 1})
+     * @Method("GET")
      * @Template()
      */
-    public function manageAction()
+    public function manageAction($page)
     {
-        return array();
+        $user = $this->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getRepository('SensioLabsJobBoardBundle:Job')->getByUserQuery($user);
+
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage($this->container->getParameter('sensio_labs_job_board.max_per_page.manage'));
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            throw new NotFoundHttpException();
+        }
+
+        return array('pager' => $pager);
     }
 
     /**
      * @Route("/api/random", name="api_job_random")
      */
-    public function apiRandomAction()
+    public function apiRandomAction(Request $request)
     {
         if (false === $this->get('security.context')->isGranted(null)) {
             return $this->redirect($this->generateUrl('homepage'));
@@ -151,6 +176,9 @@ class JobController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $randomJob = $em->getRepository('SensioLabsJobBoardBundle:Job')->getRandomJob();
+
+        $viewCounter = $this->container->get('sensiolabs.service.view_counter');
+        $viewCounter->incrementViewForRoute('job', $randomJob->getId(), $request->attributes->get('_route'));
 
         $countryCode = $randomJob->getCountry();
         $contractType = $randomJob->getContractType();
@@ -170,5 +198,39 @@ class JobController extends Controller
         ));
 
         return $response;
+    }
+
+    /**
+     * @Route("/publish/{id}", name="job_publish")
+     * @Security("has_role('ROLE_USER')")
+     * @Method("GET")
+     */
+    public function publishAction(Request $request, Job $job)
+    {
+        if (!$job->getUser() === $this->getUser()) {
+            throw new AccessDeniedException();
+        }
+
+        $jobManager = $this->container->get('sensiolabs.manager.job');
+        $jobManager->publish($job);
+
+        return new RedirectResponse($request->headers->get('referer'));
+    }
+
+    /**
+     * @Route("/delete/{id}", name="job_delete")
+     * @Security("has_role('ROLE_USER')")
+     * @Method("GET")
+     */
+    public function deleteAction(Request $request, Job $job)
+    {
+        if (!$job->getUser() === $this->getUser()) {
+            throw new AccessDeniedException();
+        }
+
+        $jobManager = $this->container->get('sensiolabs.manager.job');
+        $jobManager->safeDelete($job);
+
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }
