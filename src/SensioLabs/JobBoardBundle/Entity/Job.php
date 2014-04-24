@@ -24,7 +24,12 @@ class Job
     const ALTERNANCE = 'Alternance';
 
     const STATUS_NEW = 'New';
+    const STATUS_ORDERED = 'New';
     const STATUS_PUBLISHED = 'Published';
+    const STATUS_EXPIRED = 'Expired';
+    const STATUS_ARCHIVED = 'Archived';
+    const STATUS_DELETED = 'Deleted';
+    const STATUS_RESTORED = 'Restored';
 
     /**
      * @var integer
@@ -117,9 +122,38 @@ class Job
      * @var datetime
      *
      * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @var datetime
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="updated_at", type="datetime")
+     */
+    private $updatedAt;
+
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     */
+    private $deletedAt;
+
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="visible_from", type="datetime", nullable=true)
+     */
+    private $visibleFrom;
+
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="visible_to", type="datetime", nullable=true)
+     */
+    private $visibleTo;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
@@ -364,5 +398,95 @@ class Job
     public function isPublished()
     {
         return $this->status === self::STATUS_PUBLISHED;
+    }
+
+    public function isDeleted()
+    {
+        return $this->status === self::STATUS_DELETED;
+    }
+
+    /**
+     * Set visibleFrom
+     *
+     * @param \DateTime $visibleFrom
+     * @return Job
+     */
+    public function setVisibleFrom($visibleFrom)
+    {
+        $this->visibleFrom = $visibleFrom;
+    
+        return $this;
+    }
+
+    /**
+     * Get visibleFrom
+     *
+     * @return \DateTime 
+     */
+    public function getVisibleFrom()
+    {
+        return $this->visibleFrom;
+    }
+
+    /**
+     * Set visibleTo
+     *
+     * @param \DateTime $visibleTo
+     * @return Job
+     */
+    public function setVisibleTo($visibleTo)
+    {
+        $this->visibleTo = $visibleTo;
+    
+        return $this;
+    }
+
+    /**
+     * Get visibleTo
+     *
+     * @return \DateTime 
+     */
+    public function getVisibleTo()
+    {
+        return $this->visibleTo;
+    }
+
+    /**
+     * Used as a getter validator
+     *
+     * @return bool
+     *
+     * @Assert\True(message="End date should be greater than start date")
+     */
+    public function isVisibleDatesValid()
+    {
+        return ($this->visibleFrom < $this->visibleTo);
+    }
+
+    /**
+     * @return datetime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $deletedAt
+     * @return $this
+     */
+    public function setDeletedAt(\DateTime $deletedAt)
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return datetime
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
     }
 }

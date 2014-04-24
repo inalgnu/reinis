@@ -1,0 +1,11 @@
+<html>
+<body>
+<br/>
+<table>
+    <h2>Your job has been validated and is now online !</h2>
+    <p>
+        Link to your job: {{ path('job_show', {'country_code': job.country, 'contract_type': job.contractType, 'slug': job.slug}, true) }}
+    </p>
+</table>
+</body>
+</html>

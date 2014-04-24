@@ -5,12 +5,6 @@
     "autoload": {
         "psr-0": { "": "src/" }
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "http://satis.buildrd.sensio.net"
-        }
-    ],
     "require": {
         "doctrine/data-fixtures": "1.0.*@dev",
         "doctrine/doctrine-bundle": "1.2.*",
@@ -26,13 +20,15 @@
         "symfony/assetic-bundle": "2.3.*",
         "symfony/monolog-bundle": "~2.4",
         "symfony/swiftmailer-bundle": "2.3.*",
-        "symfony/symfony": "~2.4",
+        "symfony/symfony": "2.4.*",
         "twig/extensions": "1.0.*",
         "stof/doctrine-extensions-bundle": "1.1.*@dev",
         "exercise/htmlpurifier-bundle": "1.0.*@dev",
         "friendsofsymfony/user-bundle": "~2.0@dev",
         "predis/predis": "0.8.*@dev",
-        "snc/redis-bundle": "1.1.*@dev"
+        "snc/redis-bundle": "1.1.*@dev",
+        "sonata-project/admin-bundle": "2.2.*@dev",
+        "sonata-project/doctrine-orm-admin-bundle": "2.2.*@dev"
     },
     "scripts": {
         "post-install-cmd": [

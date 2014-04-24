@@ -29,12 +29,13 @@ class LoadJobData implements FixtureInterface
                 )
                 ->setContractType('Full Time')
                 ->setHowToApply('jobs@sensiolabs.com')
-                ->setStatus(Job::STATUS_NEW)
+                ->setStatus(Job::STATUS_ARCHIVED)
             ;
 
             if ($i > 20) {
                 $job->setCountry('GB')
                     ->setCity('London')
+                    ->setStatus(Job::STATUS_PUBLISHED)
                 ;
 
                 if ($i > 30) {

@@ -1,0 +1,59 @@
+{% extends 'SensioLabsJobBoardBundle:Includes:box.html.twig' %}
+
+{% import "SensioLabsJobBoardBundle:Includes:form_error.html.twig" as macros %}
+
+{% block box_content %}
+        <div class="padding">
+            <div class="head clearfix">
+
+                {% if not form.vars.valid %}
+                    <div id="error">
+                        <h4 style="color:red"> Errors:</h4>
+                        <ul style="color:red">
+                            {{ macros.display_error(form) }}
+                            {% if form.vars.errors|length > 0 %}
+                                {{ form_errors(form) }}
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <div class="title-company">
+                    <div class="job-title">
+                        {{ form_widget(form.title) }}
+                    </div>
+                    <div class="company-label">
+                        @ {{ form_widget(form.company) }}
+                    </div>
+                </div>
+
+                <div class="country-city-contract">
+                    <div class="country-city clearfix">
+                        <div class="city-input country-select">
+                            {{ form_widget(form.country) }}
+                        </div>
+                        <div class="city-input">
+                            {{ form_widget(form.city) }}
+                        </div>
+                    </div>
+                    <div>
+                        {{ form_widget(form.contractType) }}
+                    </div>
+                </div>
+            </div>
+
+            {% block admin_extra_fields %}
+            {% endblock %}
+
+            <div>
+                <label for="description">Description</label>
+                {{ form_widget(form.description) }}
+            </div>
+            <div class="how-to-apply">
+                <h3> How to apply? </h3><br />
+                {{ form_widget(form.howToApply) }}
+            </div>
+
+            {{ form_rest(form) }}
+        </div>
+{% endblock %}
