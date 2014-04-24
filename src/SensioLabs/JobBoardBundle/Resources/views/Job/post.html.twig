@@ -12,9 +12,9 @@
 
 {% block content %}
     {% if form.vars.value.isNew %}
-        {{ breadcrumb({'Post a job': path('job_post'), (form.vars.value.title): null}) }}
+        {{ breadcrumb({('header.post_job'|trans): path('job_post'), (form.vars.value.title): null}) }}
     {% else %}
-        {{ breadcrumb({'Post a job': path('job_post')}) }}
+        {{ breadcrumb({('header.post_job'|trans): path('job_post')}) }}
     {% endif %}
 
     <div class="box" style="padding-bottom:15px">
@@ -24,7 +24,7 @@
 
                 {% if not form.vars.valid %}
                     <div id="error">
-                        <h4 style="color:red"> Errors:</h4>
+                        <h4 style="color:red"> {{ 'job.errors'|trans }}:</h4>
                         <ul style="color:red">
                             {{ macros.display_error(form) }}
                         </ul>
@@ -61,7 +61,7 @@
                 {{ form_widget(form.description) }}
             </div>
             <div class="how-to-apply">
-                <h3> How to apply? </h3><br />
+                <h3> {{ 'job.how_to_apply'|trans }} </h3><br />
                 {{ form_widget(form.howToApply) }}
             </div>
         </div>
@@ -71,9 +71,9 @@
                 <span class="sprite-icon-light-arrow-right"></span>
                     <span>
                         {% if form.vars.value.isNew %}
-                            Update
+                            {{ 'job.update'|trans }}
                         {% else %}
-                            Preview
+                            {{ 'job.preview'|trans }}
                         {% endif %}
                     </span>
             </button>

@@ -7,11 +7,7 @@
         <div class="section">
             <article>
                 <img src="{{ asset('bundles/sensiolabsjobboard/images/home/megaphone.png') }}" alt="Job !" class="megaphone" />
-                <p class="description">
-                    The 1<sup>st</sup> jobboard 100% devoted to the <strong>Symfony</strong> community.<br />
-                    <strong>Recruiters</strong> The definitive source for Symfony talent.<br />
-                    <strong>Developers</strong> Find the project, the company, or the job of your dreams.
-                </p>
+                <p class="description">{{ 'home.description'|trans|raw }}</p>
             </article>
         </div>
     </div>
@@ -25,11 +21,11 @@
 {% block content %}
     <div id="left">
         <div class="filter">
-            <span class="title"><img class="sprite-icon-location" alt=">" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}"/>Location</span>
+            <span class="title"><img class="sprite-icon-location" alt=">" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}"/>{{ 'home.location'|trans }}</span>
             <ul>
                 <li {% if not app.request.query.has('country') %}class="active"{% endif %}>
                     <a href="{{ path('homepage', (app.request.query.all)|merge({'country': null})) }}">
-                        All countries
+                        {{ 'home.countries'|trans }}
                     </a>
                 </li>
                 {% for data in countries %}
@@ -41,18 +37,18 @@
                         </a>
                     {% if loop.index > 4 %}
                         <li>
-                            <a href="#" class="filter-action"><img class="sprite-icon-dark-arrow-up" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="^" /> Less </a>
+                            <a href="#" class="filter-action"><img class="sprite-icon-dark-arrow-up" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="^" /> {{ 'home.less'|trans }} </a>
                         </li>
                     {% endif %}
                 {% endfor %}
             </ul>
         </div>
         <div class="filter">
-            <span class="title"><img class="sprite-icon-paperclip" alt=">" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}"/> Type of contract </span>
+            <span class="title"><img class="sprite-icon-paperclip" alt=">" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}"/> {{ 'home.contract_type'|trans }} </span>
             <ul>
                 <li {% if not app.request.query.has('contract-type') %}class="active"{% endif %}>
                     <a href="{{ path('homepage', (app.request.query.all)|merge({'contract-type': null})) }}">
-                        All types of contracts
+                        {{ 'home.all_contract_type'|trans }}
                     </a>
                 </li>
                 {% for data in contract_types %}
@@ -66,7 +62,7 @@
 
                     {% if loop.index > 4 %}
                         <li>
-                            <a href="" class="filter-action"><img class="sprite-icon-dark-arrow-up" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="^" /> Less</a>
+                            <a href="" class="filter-action"><img class="sprite-icon-dark-arrow-up" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="^" /> {{ 'home.less'|trans }}</a>
                         </li>
                     {% endif %}
                 {% endfor %}
@@ -74,13 +70,13 @@
         </div>
         <ul class="function">
             <li>
-                <a href="{{ path('homepage') }}"><img class="sprite-icon-dark-arrow-right" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt=">" /> All jobs</a>
+                <a href="{{ path('homepage') }}"><img class="sprite-icon-dark-arrow-right" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt=">" /> {{ 'home.all_jobs'|trans }}</a>
             </li>
         </ul>
         <div class="feed">
             <a href="#">
                 <img src="{{ asset('bundles/sensiolabsjobboard/images/rss.png') }}" width="16" height="16" />
-                <span>Flux RSS</span>
+                <span>{{ 'home.rss'|trans }}</span>
             </a>
         </div>
     </div>
@@ -100,8 +96,8 @@
     </div>
     <div class="clear"></div>
     <script>
-        var seeMore = "More";
-        var seeLess = "Less";
+        var seeMore = "{{ 'home.more'|trans }}";
+        var seeLess = "{{ 'home.less'|trans }}";
         var blank = "{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}";
     </script>
 {% endblock %}

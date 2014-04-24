@@ -1,0 +1,32 @@
+home:
+    title: Home
+    description: >
+        The 1<sup>st</sup> jobboard 100% devoted to the <strong>Symfony</strong> community.<br />
+        <strong>Recruiters</strong> The definitive source for Symfony talent.<br />
+        <strong>Developers</strong> Find the project, the company, or the job of your dreams.
+    countries: All countries
+    contract_type: Type of contract
+    all_contract_type: All types of contracts
+    location: Location
+    all_jobs: All jobs
+    rss: RSS
+    less: Less
+    more: More
+
+header:
+    post_job: Post a job
+    my_job: My jobs
+
+job:
+    how_to_apply: How to apply ?
+    errors: Errors
+    update: Update
+    preview: Preview
+    publish: Publish
+    make_changes: Make changes
+    label:
+        title: Job Tile
+        company: Company
+        contract_type: Type of contract
+        city: City
+        how_to_apply: Send your resume at ...

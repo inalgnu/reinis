@@ -45,7 +45,7 @@ class Job
      *
      * @ORM\Column(name="title")
      *
-     * @Assert\NotBlank(message="Job title should not be empty")
+     * @Assert\NotBlank(message="job.title.not_blank")
      */
     private $title;
 
@@ -63,7 +63,7 @@ class Job
      *
      * @ORM\Column(name="company", type="string", length=255)
      *
-     * @Assert\NotBlank(message="Company title should not be empty")
+     * @Assert\NotBlank(message="job.company.not_blank")
      */
     private $company;
 
@@ -72,7 +72,7 @@ class Job
      *
      * @ORM\Column(name="country", type="string", length=2)
      *
-     * @Assert\NotBlank(message="Country title should not be empty")
+     * @Assert\NotBlank(message="job.country.not_blank")
      */
     private $country;
 
@@ -81,7 +81,7 @@ class Job
      *
      * @ORM\Column(name="city", type="string", length=64)
      *
-     * @Assert\NotBlank(message="City title should not be empty")
+     * @Assert\NotBlank(message="job.city.not_blank")
      */
     private $city;
 
@@ -90,7 +90,7 @@ class Job
      *
      * @ORM\Column(name="contract_type", type="string", length=16)
      *
-     * @Assert\NotBlank(message="Contract type should not be empty")
+     * @Assert\NotBlank(message="job.contract_type.not_blank")
      */
     private $contractType;
 
@@ -99,8 +99,8 @@ class Job
      *
      * @ORM\Column(name="description", type="text")
      *
-     * @Assert\NotBlank(message="Job description should not be empty")
-     * @Assert\Length(min = "20", minMessage = "Job description must be longer")
+     * @Assert\NotBlank(message="job.description.not_blank")
+     * @Assert\Length(min = "20", minMessage = "job.description.length")
      */
     private $description;
 

@@ -7,13 +7,19 @@
     <ul>
         <li>
             <a href="{{ path('job_post') }}"{{ add ? ' class="focus"' }}>
-                <span class="sprite-button-add{{ add ? '-focus' }}"></span> Post a job
+                <span class="sprite-button-add{{ add ? '-focus' }}"></span> {{ 'header.post_job'|trans }}
             </a>
         </li>
         <li>
             <a href="{{ path('manage') }}"{{ manage ? ' class="focus"' }}>
-                <span class="sprite-button-manage{{ manage ? '-focus' }}"></span> My jobs
+                <span class="sprite-button-manage{{ manage ? '-focus' }}"></span> {{ 'header.my_job'|trans }}
             </a>
+        </li>
+        <li>
+            <p>
+                <a href="?_locale=fr"><img src="{{ asset('bundles/sensiolabsjobboard/images/button/french-flag.png') }}" alt="french"></a>
+                <a href="?_locale=en"><img src="{{ asset('bundles/sensiolabsjobboard/images/button/english-flag.png') }}" alt="english"></a>
+            </p>
         </li>
     </ul>
 </nav>
