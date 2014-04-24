@@ -27,5 +27,8 @@
             <argument>%sensio_labs_job_board.api_host_granted%</argument>
             <tag name="security.voter" />
         </service>
+        <service id="sensiolabs.service.view_counter" class="SensioLabs\JobBoardBundle\Service\ViewCounter">
+            <argument type="service" id="snc_redis.default" />
+        </service>
     </services>
 </container>

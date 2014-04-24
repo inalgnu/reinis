@@ -30,7 +30,9 @@
         "twig/extensions": "1.0.*",
         "stof/doctrine-extensions-bundle": "1.1.*@dev",
         "exercise/htmlpurifier-bundle": "1.0.*@dev",
-        "friendsofsymfony/user-bundle": "~2.0@dev"
+        "friendsofsymfony/user-bundle": "~2.0@dev",
+        "predis/predis": "0.8.*@dev",
+        "snc/redis-bundle": "1.1.*@dev"
     },
     "scripts": {
         "post-install-cmd": [
