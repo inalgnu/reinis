@@ -3,12 +3,14 @@
 namespace SensioLabs\JobBoardBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use SensioLabs\JobBoardBundle\Entity\Job;
+use Symfony\Component\Intl\Intl;
 
 class JobController extends Controller
 {
@@ -131,5 +133,37 @@ class JobController extends Controller
     public function manageAction()
     {
         return array();
+    }
+
+    /**
+     * @Route("/api/random", name="api_job_random")
+     */
+    public function apiRandomAction()
+    {
+        if (false === $this->get('security.context')->isGranted(null)) {
+            return $this->redirect($this->generateUrl('homepage'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $randomJob = $em->getRepository('SensioLabsJobBoardBundle:Job')->getRandomJob();
+
+        $countryCode = $randomJob->getCountry();
+        $contractType = $randomJob->getContractType();
+
+        $response = new JsonResponse(array(
+            'title'         => $randomJob->getTitle(),
+            'company'       => $randomJob->getCompany(),
+            'city'          => $randomJob->getCity(),
+            'country_name'  => Intl::getRegionBundle()->getCountryName($countryCode),
+            'country_code'  => $countryCode,
+            'contract'      => $contractType,
+            'url'           => $this->generateUrl('job_show', array(
+                'country_code'  => $countryCode,
+                'contract_type' => $contractType,
+                'slug'          => $randomJob->getSlug(),
+            )),
+        ));
+
+        return $response;
     }
 }

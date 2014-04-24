@@ -26,3 +26,4 @@ parameters:
 
     sensio_labs_job_board.max_per_page: 10
     sensio_labs_job_board.admin_email: admin@exemple.com
+    sensio_labs_job_board.api_host_granted: [symfony.com, sensiolabs.com]
