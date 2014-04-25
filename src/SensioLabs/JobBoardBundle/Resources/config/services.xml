@@ -21,5 +21,11 @@
             <argument type="service" id="templating" />
             <argument>%sensio_labs_job_board.admin_email%</argument>
         </service>
+        <service id="security.access.whitelist_voter" class="SensioLabs\JobBoardBundle\Security\Authorization\Voter\ApiHostVoter" public="false">
+            <argument type="service" id="request_stack" strict="false" />
+            <argument>%kernel.environment%</argument>
+            <argument>%sensio_labs_job_board.api_host_granted%</argument>
+            <tag name="security.voter" />
+        </service>
     </services>
 </container>

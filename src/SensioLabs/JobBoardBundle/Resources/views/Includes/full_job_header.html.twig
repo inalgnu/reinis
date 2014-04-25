@@ -1,13 +1,13 @@
 <h2>
-    <a href="{{ path('job_show') }}" class="title">
+    <a href="{{ path('job_show', {'country_code': job.country, 'contract_type': job.contractType, 'slug': job.slug}) }}" class="title">
         {{ job.title }}
     </a>
 </h2>
 
 <div class="details">
     <span class="filter">
-        <a href="#">{{ job.city }}, {{ job.country|country }}</a> /
-        <a href="#">{{ job.contractType }}</a>
+        <a href="{{ path('homepage', (app.request.query.all)|merge({'country': job.country, 'page': null})) }}">{{ job.city }}, {{ job.country|country }}</a> /
+        <a href="{{ path('homepage', (app.request.query.all)|merge({'contract-type': job.contractType, 'page': null})) }}">{{ job.contractType }}</a>
     </span>
 </div>
 

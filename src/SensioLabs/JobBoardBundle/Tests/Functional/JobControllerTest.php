@@ -29,11 +29,11 @@ class JobControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/post');
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $this->client->request('POST', '/post');
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testFormSubmissionAndRedirection()
@@ -52,7 +52,7 @@ class JobControllerTest extends WebTestCase
 
         $this->client->submit($form);
 
-        $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect('/FR/Internship/developer/preview'));
 
         $crawler = $this->client->followRedirect();
@@ -69,24 +69,24 @@ class JobControllerTest extends WebTestCase
 
         $crawler = $this->client->click($link);
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $form = $crawler->selectButton('Update')->form();
 
-        $this->assertEquals('Developer', $form['job[title]']->getValue());
-        $this->assertEquals('SensioLabs', $form['job[company]']->getValue());
-        $this->assertEquals('FR', $form['job[country]']->getValue());
-        $this->assertEquals('Paris', $form['job[city]']->getValue());
-        $this->assertEquals('Internship', $form['job[contractType]']->getValue());
-        $this->assertEquals('Lorem ipsum dolor sit amet, consectetuer adipiscing elit', $form['job[description]']->getValue());
-        $this->assertEquals('jobs@sensiolabs.com', $form['job[howToApply]']->getValue());
+        $this->assertSame('Developer', $form['job[title]']->getValue());
+        $this->assertSame('SensioLabs', $form['job[company]']->getValue());
+        $this->assertSame('FR', $form['job[country]']->getValue());
+        $this->assertSame('Paris', $form['job[city]']->getValue());
+        $this->assertSame('Internship', $form['job[contractType]']->getValue());
+        $this->assertSame('Lorem ipsum dolor sit amet, consectetuer adipiscing elit', $form['job[description]']->getValue());
+        $this->assertSame('jobs@sensiolabs.com', $form['job[howToApply]']->getValue());
 
         // Update the title and check if the route parameter is correct
         $form['job[title]'] = 'Developer 2';
 
         $this->client->submit($form);
 
-        $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect('/FR/Internship/developer-2/preview'));
 
         $crawler = $this->client->followRedirect();
@@ -100,7 +100,7 @@ class JobControllerTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/');
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $this->assertCount(10, $crawler->filter('.box'));
     }
@@ -114,9 +114,25 @@ class JobControllerTest extends WebTestCase
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
         ));
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $this->assertCount(10, $crawler->filter('.box'));
+    }
+
+    public function testJobShow()
+    {
+        $this->loadFixtures();
+        $crawler = $this->client->request('GET', '/');
+        $link = $crawler->selectLink('Developer 1')->link();
+        $crawler = $this->client->click($link);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertRegExp('/Developer 1/', $crawler->filter('.title')->text());
+        $this->assertRegExp('/SensioLabs/', $crawler->filter('.company')->text());
+        $this->assertRegExp('/Paris, France/', $crawler->filter('.details')->text());
+        $this->assertRegExp('/Full Time/', $crawler->filter('.details')->text());
+        $this->assertRegExp('/Lorem ipsum dolor sit amet, consectetur adipisicing elit/', $crawler->filter('.description')->text());
+        $this->assertRegExp('/jobs@sensiolabs.com/', $crawler->filter('.how-to-apply')->text());
     }
 
     protected function loadFixtures()

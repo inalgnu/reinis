@@ -3,12 +3,14 @@
 namespace SensioLabs\JobBoardBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use SensioLabs\JobBoardBundle\Entity\Job;
+use Symfony\Component\Intl\Intl;
 
 class JobController extends Controller
 {
@@ -44,7 +46,7 @@ class JobController extends Controller
     public function previewAction($slug)
     {
         $em = $this->getDoctrine()->getManager();
-        $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneBy(array('slug' => $slug));
+        $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneBySlug($slug);
 
         if (!$job) {
            throw $this->createNotFoundException(sprintf('Unable to find job with slug %s', $slug));
@@ -109,12 +111,19 @@ class JobController extends Controller
     }
 
     /**
-     * @Route("/show", name="job_show")
+     * @Route("/{country_code}/{contract_type}/{slug}", name="job_show", requirements={"country_code"= "[A-Z]{2}" } )
      * @Template()
      */
-    public function showAction()
+    public function showAction($slug)
     {
-        return array();
+        $em = $this->getDoctrine()->getManager();
+        $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneBySlug($slug);
+
+        if (!$job) {
+            throw $this->createNotFoundException(sprintf('Unable to find job with slug %s', $slug));
+        }
+
+        return array('job' => $job);
     }
 
     /**
@@ -124,5 +133,37 @@ class JobController extends Controller
     public function manageAction()
     {
         return array();
+    }
+
+    /**
+     * @Route("/api/random", name="api_job_random")
+     */
+    public function apiRandomAction()
+    {
+        if (false === $this->get('security.context')->isGranted(null)) {
+            return $this->redirect($this->generateUrl('homepage'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $randomJob = $em->getRepository('SensioLabsJobBoardBundle:Job')->getRandomJob();
+
+        $countryCode = $randomJob->getCountry();
+        $contractType = $randomJob->getContractType();
+
+        $response = new JsonResponse(array(
+            'title'         => $randomJob->getTitle(),
+            'company'       => $randomJob->getCompany(),
+            'city'          => $randomJob->getCity(),
+            'country_name'  => Intl::getRegionBundle()->getCountryName($countryCode),
+            'country_code'  => $countryCode,
+            'contract'      => $contractType,
+            'url'           => $this->generateUrl('job_show', array(
+                'country_code'  => $countryCode,
+                'contract_type' => $contractType,
+                'slug'          => $randomJob->getSlug(),
+            )),
+        ));
+
+        return $response;
     }
 }

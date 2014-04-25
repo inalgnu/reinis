@@ -79,4 +79,20 @@ class JobRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function getRandomJob()
+    {
+        $em = $this->getEntityManager();
+        $max = $em->createQuery('SELECT MAX(q.id) FROM SensioLabsJobBoardBundle:Job q')
+            ->getSingleScalarResult();
+
+        return $em->createQuery('
+                SELECT q FROM SensioLabsJobBoardBundle:Job q
+                WHERE q.id >= :rand
+                ORDER BY q.id ASC
+            ')
+            ->setParameter('rand', rand(0, $max))
+            ->setMaxResults(1)
+            ->getSingleResult();
+    }
 }
