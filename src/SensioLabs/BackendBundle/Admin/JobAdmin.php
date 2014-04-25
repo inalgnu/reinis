@@ -14,6 +14,15 @@ class JobAdmin extends Admin
 {
     protected $baseRoutePattern = '/';
 
+    protected $datagridValues = array(
+        '_sort_order' => 'DESC',
+        '_sort_by' => 'createdAt'
+    );
+
+    protected $formOptions = array(
+        'validation_groups' => 'admin'
+    );
+
     private $securityContext;
 
     private $mailer;
@@ -49,11 +58,6 @@ class JobAdmin extends Admin
 
         return $query;
     }
-
-    protected $datagridValues = array(
-        '_sort_order' => 'DESC',
-        '_sort_by' => 'createdAt'
-    );
 
     protected function configureListFields(ListMapper $listMapper)
     {
@@ -103,7 +107,7 @@ class JobAdmin extends Admin
         $em = $this->getModelManager()->getEntityManager($this->getClass());
         $originalObject = $em->getUnitOfWork()->getOriginalEntityData($object);
 
-        if (null === $originalObject['visibleTo']) {
+        if (null === $originalObject['visibleFrom'] && null === $originalObject['visibleTo']) {
             $this->sendNotificationEmail($object);
         }
     }

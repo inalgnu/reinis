@@ -24,7 +24,7 @@ class Job
     const ALTERNANCE = 'Alternance';
 
     const STATUS_NEW = 'New';
-    const STATUS_ORDERED = 'New';
+    const STATUS_ORDERED = 'Ordered';
     const STATUS_PUBLISHED = 'Published';
     const STATUS_EXPIRED = 'Expired';
     const STATUS_ARCHIVED = 'Archived';
@@ -456,7 +456,7 @@ class Job
      *
      * @return bool
      *
-     * @Assert\True(message="End date should be greater than start date")
+     * @Assert\True(message="End date should be greater than start date", groups={"admin"})
      */
     public function isVisibleDatesValid()
     {

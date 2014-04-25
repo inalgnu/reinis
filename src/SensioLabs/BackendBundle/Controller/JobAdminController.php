@@ -21,8 +21,7 @@ class JobAdminController extends Controller
         $datagrid = $this->admin->getDatagrid();
         $formView = $datagrid->getForm()->createView();
 
-        foreach($datagrid->getResults() as $object)
-        {
+        foreach($datagrid->getResults() as $object) {
             $object->listDisplays = $viewCounter->getViewForRoute('job', $object->getId(), 'homepage') ?: 0;
             $object->viewDisplays = $viewCounter->getViewForRoute('job', $object->getId(), 'job_show') ?: 0;
             $object->extDisplays = $viewCounter->getViewForRoute('job', $object->getId(), 'api_job_random') ?: 0;
@@ -53,9 +52,7 @@ class JobAdminController extends Controller
 
         if (!$object->isPublished()) {
             $jobManager = $this->container->get('sensiolabs.manager.job');
-
             $jobManager->safeDelete($object);
-
             $this->addFlash('sonata_flash_success', sprintf('Job %s has been successfully deleted.', $object->getTitle()));
         } else {
             $this->addFlash('sonata_flash_error', sprintf('You cannot delete %s, it must not be published.', $object->getTitle()));
@@ -79,9 +76,7 @@ class JobAdminController extends Controller
 
         if ($object->isDeleted()) {
             $jobManager = $this->container->get('sensiolabs.manager.job');
-
             $jobManager->restore($object);
-
             $this->addFlash('sonata_flash_success', sprintf('Job %s has been successfully restored.', $object->getTitle()));
         } else {
             $this->addFlash('sonata_flash_error', sprintf('You cannot restore %s, it must be deleted first.', $object->getTitle()));

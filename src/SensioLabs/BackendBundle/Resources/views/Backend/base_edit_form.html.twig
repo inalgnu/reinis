@@ -3,7 +3,7 @@
 
     {% set url = admin.id(object) is not null ? 'edit' : 'create' %}
 
-    {% if not admin.hasRoute(url)%}
+    {% if not admin.hasRoute(url) %}
         <div>
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
@@ -11,19 +11,14 @@
         <form class="form-horizontal"
               action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
               method="POST"
-                {% if not admin_pool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
-                novalidate
-                >
+              novalidate="novalidate"
+        >
 
             {% embed "SensioLabsBackendBundle:Includes:job_form.html.twig" %}
                 {% block admin_extra_fields %}
                     <br/><br/>
                     <div class="backend-job-dates">
-                        Visible from
-                        {{ form_widget(form.visibleFrom) }}
-                        To
-                        {{ form_widget(form.visibleTo) }}
-                        (format: mm/dd/yyyy)
+                        Visible from {{ form_widget(form.visibleFrom) }} To {{ form_widget(form.visibleTo) }} (format: mm/dd/yyyy)
                     </div>
                 {% endblock %}
             {% endembed %}
