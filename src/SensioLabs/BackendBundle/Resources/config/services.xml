@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="sonata.admin.job" class="SensioLabs\BackendBundle\Admin\JobAdmin">
+            <tag name="sonata.admin" manager_type="orm" group="Content" label="Job"/>
+            <argument />
+            <argument>SensioLabs\JobBoardBundle\Entity\Job</argument>
+            <argument>SensioLabsBackendBundle:JobAdmin</argument>
+            <argument type="service" id="security.context" />
+            <argument type="service" id="sensiolabs.service.mailer" />
+            <argument>%sensio_labs_job_board.admin_email%</argument>
+            <call method="setTemplates">
+                <argument type="collection">
+                    <argument key="layout">SensioLabsBackendBundle:Backend:layout.html.twig</argument>
+                    <argument key="edit">SensioLabsBackendBundle:Backend:base_edit.html.twig</argument>
+                    <argument key="list">SensioLabsBackendBundle:Backend:base_list.html.twig</argument>
+                </argument>
+            </call>
+        </service>
+    </services>
+</container>

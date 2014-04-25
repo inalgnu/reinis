@@ -87,3 +87,12 @@ snc_redis:
             type: predis
             alias: default
             dsn: redis://localhost
+
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        sonata.admin.block.admin_list:
+            contexts:   [admin]
+
+sonata_admin:
+    title: Backend

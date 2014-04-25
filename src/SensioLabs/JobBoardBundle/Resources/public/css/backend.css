@@ -11,10 +11,6 @@
     margin-left: 10px;
 }
 
-.backend-list a[href] {
-    text-decoration: underline;
-}
-
 .backend-flashes {
     margin: 0 0 10px 0;
     font-weight: bold;
@@ -74,4 +70,17 @@
     background: #82e83e;
     border-color: #82e83e;
     color: white;
+}
+
+body.sonata-bc {
+    padding-top: 0 !important;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.alert {
+    margin-top: 20px !important;
+    margin-bottom: 0px !important;
 }

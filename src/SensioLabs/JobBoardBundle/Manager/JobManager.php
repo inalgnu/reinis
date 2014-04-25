@@ -116,4 +116,17 @@ class JobManager
 
         $this->mailer->send($message);
     }
+
+    public function safeDelete(Job $job)
+    {
+        $job->setStatus(Job::STATUS_DELETED);
+        $job->setDeletedAt(new \DateTime());
+        $this->entityManager->flush();
+    }
+
+    public function restore(Job $job)
+    {
+        $job->setStatus(Job::STATUS_RESTORED);
+        $this->entityManager->flush();
+    }
 }

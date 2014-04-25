@@ -31,13 +31,13 @@ casper.test.begin('Announcement list - Infinite scroll tests', 9, function(test)
 
     casper.then(function() {
         test.info('The "Full Time" link exists:');
-        this.test.assertSelectorHasText('#left > div:nth-child(2) > ul > li:nth-child(2) > a', 'Full Time (30)');
+        this.test.assertSelectorHasText('#left > div:nth-child(2) > ul > li:nth-child(2) > a', 'Full Time (20)');
     });
 
     casper.thenClick('a[href*="?country=FR&contract-type=Full+Time"]');
     casper.then(function() {
-        test.info('We click on "Full Time (30)" link, he become active:');
-        this.test.assertSelectorHasText('#left > div:nth-child(2) > ul > li.active > a', 'Full Time (30)');
+        test.info('We click on "Full Time (20)" link, he become active:');
+        this.test.assertSelectorHasText('#left > div:nth-child(2) > ul > li.active > a', 'Full Time (20)');
         test.info('And we see 10 announcements:');
         test.assertElementCount('.box', 10);
     });

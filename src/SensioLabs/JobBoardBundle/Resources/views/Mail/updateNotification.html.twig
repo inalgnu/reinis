@@ -7,7 +7,7 @@
         <td>Titre de l'annonce : {{ job.title }}</td>
     </tr>
     <tr>
-        <td>Lien vers l'annonce: {{ path('job_preview', {'country_code': job.country, 'contract_type': job.contractType, 'slug': job.slug}) }}</td>
+        <td>Lien vers l'annonce: {{ path('admin_sensiolabs_jobboard_job_edit', {'id': job.id}) }}</td>
     </tr>
 </table>
 </body>

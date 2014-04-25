@@ -1,0 +1,11 @@
+{% if object.isDeleted %}
+    <a href="{{ admin.generateObjectUrl('restore', object) }}" class="btn restore_link btn-small" title="Restore">
+        <i class="icon-ok"></i>
+        Restore
+    </a>
+{% else %}
+    <a href="{{ admin.generateObjectUrl('safe-delete', object) }}" class="btn delete_link btn-small" title="Delete">
+        <i class="icon-remove"></i>
+        Delete
+    </a>
+{% endif %}

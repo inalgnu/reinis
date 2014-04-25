@@ -30,7 +30,7 @@ class JobRepository extends EntityRepository
 
         $qb = $this->createQueryBuilder('a')
             ->where('a.status = :status')
-            ->setParameter('status', Job::STATUS_NEW)
+            ->setParameter('status', Job::STATUS_PUBLISHED)
             ->setFirstResult($offset)
             ->setMaxResults($maxResults)
         ;
@@ -58,7 +58,7 @@ class JobRepository extends EntityRepository
         $qb = $this->createQueryBuilder('c')
             ->select('count(c) as number, c.country')
             ->where('c.status = :status')
-            ->setParameter('status', Job::STATUS_NEW)
+            ->setParameter('status', Job::STATUS_PUBLISHED)
             ->groupBy('c.country')
         ;
 
@@ -73,7 +73,7 @@ class JobRepository extends EntityRepository
         $qb = $this->createQueryBuilder('c')
             ->select('count(c) as number, c.contractType')
             ->where('c.status = :status')
-            ->setParameter('status', Job::STATUS_NEW)
+            ->setParameter('status', Job::STATUS_PUBLISHED)
             ->groupBy('c.contractType')
         ;
 
