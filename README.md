@@ -1,6 +1,9 @@
 SensioLabs Jobs
 ===============
 
+##### Requirements:
+* Install and start Redis : [redis quickstart](http://redis.io/topics/quickstart)
+
 ##### 1. Install the vendors : `php composer.phar install`
 
 ##### 2. Create the folder app/sessions

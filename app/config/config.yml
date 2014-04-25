@@ -80,3 +80,10 @@ fos_user:
     db_driver: orm
     firewall_name: secured_area
     user_class: SensioLabs\JobBoardBundle\Entity\User
+
+snc_redis:
+    clients:
+        default:
+            type: predis
+            alias: default
+            dsn: redis://localhost
