@@ -19,7 +19,11 @@ class SensioLabsJobBoardExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $this->processConfiguration(new Configuration(), $configs);
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
+        $container->setParameter('sensio_labs_job_board.admin_email', $config['admin_email']);
+        $container->setParameter('sensio_labs_job_board.max_per_page.homepage', $config['max_per_page']['homepage']);
+        $container->setParameter('sensio_labs_job_board.max_per_page.manage', $config['max_per_page']['manage']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');

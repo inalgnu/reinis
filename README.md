@@ -13,7 +13,14 @@ mkdir app/sessions
 chmod -R 755 app/sessions
 ```
 
-##### 3. Setup and launch tests
+##### 4. Load assets
+
+```
+php app/console assets:install --symlink
+php app/console assetic:dump
+```
+
+##### 5. Setup and launch tests
 
 ###### With phpunit :
 

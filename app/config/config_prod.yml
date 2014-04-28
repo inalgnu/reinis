@@ -21,12 +21,8 @@ monolog:
                 - ^/
         grouped:
             type:    group
-            members: [file, raven]
+            members: [file]
         file:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
-        raven:
-            type:  raven
-            dsn:   %insight.raven.dsn%
-            level: critical

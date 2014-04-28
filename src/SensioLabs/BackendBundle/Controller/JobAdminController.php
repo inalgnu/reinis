@@ -21,7 +21,7 @@ class JobAdminController extends Controller
         $datagrid = $this->admin->getDatagrid();
         $formView = $datagrid->getForm()->createView();
 
-        foreach($datagrid->getResults() as $object) {
+        foreach ($datagrid->getResults() as $object) {
             $object->listDisplays = $viewCounter->getViewForRoute('job', $object->getId(), 'homepage') ?: 0;
             $object->viewDisplays = $viewCounter->getViewForRoute('job', $object->getId(), 'job_show') ?: 0;
             $object->extDisplays = $viewCounter->getViewForRoute('job', $object->getId(), 'api_job_random') ?: 0;

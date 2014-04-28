@@ -2,15 +2,15 @@
 
 namespace SensioLabs\JobBoardBundle\Manager;
 
-use Doctrine\ORM\EntityManager;
-use FOS\UserBundle\Model\UserInterface;
-use \Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use SensioLabs\JobBoardBundle\Entity\Job;
 use Symfony\Component\Security\Core\SecurityContext;
+use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Model\UserInterface;
+use SensioLabs\JobBoardBundle\Entity\Job;
+use SensioLabs\JobBoardBundle\Service\Mailer;
 
-class JobManager
+class JobManager implements JobManagerInterface
 {
     private $entityManager;
 
@@ -18,21 +18,18 @@ class JobManager
 
     private $mailer;
 
-    private $templating;
-
     private $adminEmail;
 
-    public function __construct(EntityManager $entityManager, SecurityContext $securityContext, \Swift_Mailer $mailer, TwigEngine $templating, $adminEmail)
+    public function __construct(EntityManager $entityManager, SecurityContext $securityContext, Mailer $mailer, $adminEmail)
     {
         $this->entityManager = $entityManager;
         $this->securityContext = $securityContext;
         $this->mailer = $mailer;
-        $this->templating = $templating;
         $this->adminEmail = $adminEmail;
     }
 
     /**
-     * @param SessionInterface $session
+     * @param  SessionInterface      $session
      * @return bool|Job
      * @throws NotFoundHttpException
      */
@@ -57,11 +54,19 @@ class JobManager
 
     /**
      * @param SessionInterface $session
-     * @param $jobId
+     * @param $id
      */
-    public function setJobIdInSession(SessionInterface $session, $jobId)
+    public function setJobIdInSession(SessionInterface $session, $id)
     {
-        $session->set('jobId', $jobId);
+        $session->set('jobId', $id);
+    }
+
+    /**
+     * @param SessionInterface $session
+     */
+    public function removeJobIdFromSession(SessionInterface $session)
+    {
+        $session->remove('jobId');
     }
 
     /**
@@ -100,21 +105,21 @@ class JobManager
     /**
      * @param $job
      */
-    public function sendUpdateNotificationMail($job)
+    public function sendUpdateNotificationMail(Job $job)
     {
         $user = $this->securityContext->getToken()->getUser();
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject(sprintf('User %s update her job', $user->getUsername()))
-            ->setFrom($user->getEmail())
-            ->setTo($this->adminEmail)
-            ->setBody($this->templating->render('SensioLabsJobBoardBundle:Mail:updateNotification.html.twig', array(
-                'name' => $user->getUsername(),
-                'job'  => $job,
-            )))
-        ;
+        $body = $this->mailer->createBody('SensioLabsJobBoardBundle:Mail:updateNotification.html.twig',  array(
+            'name' => $user->getUsername(),
+            'job'  => $job,
+        ));
 
-        $this->mailer->send($message);
+        $this->mailer->sendMail(
+            sprintf('User %s update her job', $user->getUsername()),
+            $user->getEmail(),
+            $this->adminEmail,
+            $body
+        );
     }
 
     public function safeDelete(Job $job)

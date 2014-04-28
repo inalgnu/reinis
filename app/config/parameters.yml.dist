@@ -24,7 +24,8 @@ parameters:
     sensiolabs_connect.api_endpoint: https://connect.sensiolabs.com/api
     sensiolabs_connect.sln_js: https://connect.sensiolabs.com/sln.js
 
-    sensio_labs_job_board.admin_email: admin@exemple.com
-    sensio_labs_job_board.api_host_granted: [symfony.com, sensiolabs.com]
-    sensio_labs_job_board.max_per_page.homepage: 10
-    sensio_labs_job_board.max_per_page.manage: 25
+    sensiolabs_jobboard.admin_email: admin@example.com
+    sensiolabs_jobboard.max_per_page.homepage: 10
+    sensiolabs_jobboard.max_per_page.manage: 25
+
+    api_host_granted: [symfony.com, sensiolabs.com]

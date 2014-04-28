@@ -2,10 +2,9 @@
 
 namespace SensioLabs\JobBoardBundle\Test\Functional;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadJobData;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 class ApiTest extends WebTestCase
 {
@@ -18,6 +17,11 @@ class ApiTest extends WebTestCase
         $purger = new ORMPurger($this->client->getContainer()->get('doctrine.orm.entity_manager'));
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
         $purger->purge();
+
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadUserData',
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadJobData'
+        ));
     }
 
     protected function tearDown()
@@ -34,7 +38,6 @@ class ApiTest extends WebTestCase
 
     public function testApiRandomJob()
     {
-        $this->loadFixtures();
         $this->client->request(
             'GET',
             '/api/random',
@@ -56,18 +59,12 @@ class ApiTest extends WebTestCase
         $jsonResponse = $this->client->getResponse()->getContent();
         $jobApi = json_decode($jsonResponse, true);
 
-        $this->assertRegExp('/Developer/',$jobApi['title']);
-        $this->assertSame('Paris', $jobApi['city']);
-        $this->assertSame('SensioLabs', $jobApi['company']);
-        $this->assertSame('FR', $jobApi['country_code']);
-        $this->assertSame('France', $jobApi['country_name']);
-        $this->assertSame('Full Time', $jobApi['contract']);
-        $this->assertRegExp('#/FR/Full%20Time/developer#', $jobApi['url']);
-    }
-
-    protected function loadFixtures()
-    {
-        $fixture = new LoadJobData();
-        $fixture->load($this->client->getContainer()->get('doctrine')->getManager());
+        $this->assertNotNull($jobApi['title']);
+        $this->assertNotNull($jobApi['city']);
+        $this->assertNotNull($jobApi['company']);
+        $this->assertNotNull($jobApi['country_code']);
+        $this->assertNotNull($jobApi['country_name']);
+        $this->assertNotNull($jobApi['contract']);
+        $this->assertNotNull($jobApi['url']);
     }
 }
