@@ -41,5 +41,8 @@
             <argument>%kernel.default_locale%</argument>
             <tag name="kernel.event_subscriber" />
         </service>
+        <service id="sensiolabs.event_listener.job" class="SensioLabs\JobBoardBundle\EventListener\JobSubscriber">
+            <tag name="doctrine.event_listener" event="prePersist" />
+        </service>
     </services>
 </container>

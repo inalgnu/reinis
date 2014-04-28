@@ -19,7 +19,7 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="Job", mappedBy="job")
+     * @ORM\OneToMany(targetEntity="Job", mappedBy="user")
      */
     private $jobs;
 

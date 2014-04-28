@@ -61,8 +61,9 @@ class JobRepository extends EntityRepository
     public function setFiltersQB($qb, $countryCode = null, $contractType = null)
     {
         if ($countryCode) {
-            $qb->andWhere('a.country = :country_code')
-                ->setParameter('country_code', $countryCode)
+            $qb->andWhere('l.country = :country_code')
+               ->setParameter('country_code', $countryCode)
+               ->innerJoin('a.location', 'l')
             ;
         }
 
@@ -96,13 +97,14 @@ class JobRepository extends EntityRepository
     public function getCountriesWithJob()
     {
         $qb = $this->createQueryBuilder('c')
-            ->select('count(c) as number, c.country')
+            ->select('count(l) as number, l.country')
             ->where('c.status = :status')
             ->setParameter('status', Job::STATUS_PUBLISHED)
             ->andWhere('c.visibleFrom <= :current_date')
             ->andWhere('c.visibleTo >= :current_date')
             ->setParameter('current_date', new \DateTime())
-            ->groupBy('c.country')
+            ->innerJoin('c.location', 'l')
+            ->groupBy('l.country')
         ;
 
         return $qb->getQuery()->getResult();
