@@ -489,4 +489,22 @@ class Job
     {
         return $this->deletedAt;
     }
+
+    /**
+     * @return bool
+     */
+    public function getTimeLeft()
+    {
+        if ($this->visibleFrom && $this->visibleTo) {
+            $interval = $this->visibleFrom->diff($this->visibleTo);
+
+            if ($interval->d > 1) {
+                return $interval->format('%d day(s) left');
+            }
+
+            return $interval->format('%h hour(s) left');
+        }
+
+        return false;
+    }
 }

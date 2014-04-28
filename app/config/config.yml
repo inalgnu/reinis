@@ -73,8 +73,10 @@ stof_doctrine_extensions:
             timestampable: true
 
 sensio_labs_job_board:
-    max_per_page: %sensio_labs_job_board.max_per_page%
     admin_email: %sensio_labs_job_board.admin_email%
+    max_per_page:
+        homepage: %sensio_labs_job_board.max_per_page.homepage%
+        manage: %sensio_labs_job_board.max_per_page.manage%
 
 fos_user:
     db_driver: orm

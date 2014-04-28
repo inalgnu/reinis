@@ -129,4 +129,10 @@ class JobManager
         $job->setStatus(Job::STATUS_RESTORED);
         $this->entityManager->flush();
     }
+
+    public function publish(Job $job)
+    {
+        $job->setStatus(Job::STATUS_PUBLISHED);
+        $this->entityManager->flush();
+    }
 }

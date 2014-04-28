@@ -18,7 +18,6 @@ class User extends BaseUser
      */
     protected $id;
 
-
     /**
      * @ORM\OneToMany(targetEntity="Job", mappedBy="job")
      */
@@ -35,7 +34,7 @@ class User extends BaseUser
     /**
      * @param mixed $job
      */
-    public function addJob($job)
+    public function addJob(Job $job)
     {
         $this->jobs[] = $job;
     }
