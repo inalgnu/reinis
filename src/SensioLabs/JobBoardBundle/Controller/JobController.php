@@ -47,8 +47,8 @@ class JobController extends Controller
 
         return array(
             'jobs' => $jobs,
-            'countries' => $jobRepository->getCountriesWithJob(),
-            'contract_types' => $jobRepository->getContractTypesWithJob(),
+            'countries' => $jobRepository->getCountriesWithJob($contractType),
+            'contract_types' => $jobRepository->getContractTypesWithJob($country),
         );
     }
 

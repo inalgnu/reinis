@@ -95,16 +95,19 @@ class JobRepository extends EntityRepository
     /**
      * @return array
      */
-    public function getCountriesWithJob()
+    public function getCountriesWithJob($contractType = null)
     {
-        $qb = $this->createQueryBuilder('c')
+        $qb = $this->createQueryBuilder('a')
             ->select('count(l) as number, l.country')
-            ->where('c.status = :status')
+            ->where('a.status = :status')
             ->setParameter('status', Job::STATUS_PUBLISHED)
-            ->andWhere('c.visibleFrom <= :current_date')
-            ->andWhere('c.visibleTo >= :current_date')
+            ->andWhere('a.visibleFrom <= :current_date')
+            ->andWhere('a.visibleTo >= :current_date')
             ->setParameter('current_date', new \DateTime())
-            ->innerJoin('c.location', 'l')
+        ;
+
+        $qb = $this->setFiltersQB($qb, null, $contractType);
+        $qb->innerJoin('a.location', 'l')
             ->groupBy('l.country')
         ;
 
@@ -114,16 +117,19 @@ class JobRepository extends EntityRepository
     /**
      * @return array
      */
-    public function getContractTypesWithJob()
+    public function getContractTypesWithJob($country = null)
     {
-        $qb = $this->createQueryBuilder('c')
-            ->select('count(c) as number, c.contractType')
-            ->where('c.status = :status')
+        $qb = $this->createQueryBuilder('a')
+            ->select('count(a) as number, a.contractType')
+            ->where('a.status = :status')
             ->setParameter('status', Job::STATUS_PUBLISHED)
-            ->andWhere('c.visibleFrom <= :current_date')
-            ->andWhere('c.visibleTo >= :current_date')
+            ->andWhere('a.visibleFrom <= :current_date')
+            ->andWhere('a.visibleTo >= :current_date')
             ->setParameter('current_date', new \DateTime())
-            ->groupBy('c.contractType')
+        ;
+
+        $qb = $this->setFiltersQB($qb, $country);
+        $qb->groupBy('a.contractType')
         ;
 
         return $qb->getQuery()->getResult();

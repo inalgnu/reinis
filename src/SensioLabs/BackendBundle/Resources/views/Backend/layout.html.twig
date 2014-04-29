@@ -41,7 +41,7 @@
         {{ 'Admin'|trans({}, 'SonataAdminBundle') }}
 
         {% if _title is not empty %}
-            {{ _title|raw }}
+            {{ _title|purify }}
         {% else %}
             {% if action is defined %}
                 -
@@ -76,7 +76,7 @@
                 <div class="row-fluid">
                     {% if _side_menu is not empty %}
                         <div class="sidebar span2">
-                            <div class="well sonata-ba-side-menu" style="padding: 8px 0;">{{ _side_menu|raw }}</div>
+                            <div class="well sonata-ba-side-menu" style="padding: 8px 0;">{{ _side_menu|purify }}</div>
                         </div>
                     {% endif %}
 
@@ -84,29 +84,29 @@
                         {% block sonata_admin_content %}
 
                             {% if _preview is not empty %}
-                                <div class="sonata-ba-preview">{{ _preview|raw }}</div>
+                                <div class="sonata-ba-preview">{{ _preview|purify }}</div>
                             {% endif %}
 
                             {% if _content is not empty %}
-                                <div class="sonata-ba-content">{{ _content|raw }}</div>
+                                <div class="sonata-ba-content">{{ _content|purify }}</div>
                             {% endif %}
 
                             {% if _show is not empty %}
-                                <div class="sonata-ba-show">{{ _show|raw }}</div>
+                                <div class="sonata-ba-show">{{ _show|purify }}</div>
                             {% endif %}
 
                             {% if _form is not empty %}
-                                <div class="sonata-ba-form">{{ _form|raw }}</div>
+                                <div class="sonata-ba-form">{{ _form|purify }}</div>
                             {% endif %}
 
                             {% if _list_table is not empty or _list_filters is not empty %}
                                 <div class="row-fluid">
                                     <div class="sonata-ba-list {% if _list_filters|trim %}span10{% else %}span12{% endif %}">
-                                        {{ _list_table|raw }}
+                                        {{ _list_table|purify }}
                                     </div>
                                     {% if _list_filters|trim %}
                                         <div class="sonata-ba-filter span2">
-                                            {{ _list_filters|raw }}
+                                            {{ _list_filters|purify }}
                                         </div>
                                     {% endif %}
                                 </div>
