@@ -1,0 +1,17 @@
+{% extends "SensioLabsJobBoardBundle::layout.html.twig" %}
+
+{% block title %}
+    Une erreur est survenue : {{ status_text }}
+{% endblock %}
+
+{% block content %}
+     {% embed 'SensioLabsJobBoardBundle:Includes:box.html.twig' %}
+        {% block box_content %}
+            <div class="center">
+                <h1>{{ status_code }}</h1>
+                <h1>{{ status_text }}</h1>
+            </div>
+            <br/><br/>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
