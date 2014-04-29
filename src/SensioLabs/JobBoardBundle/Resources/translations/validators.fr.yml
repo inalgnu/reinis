@@ -1,0 +1,9 @@
+job:
+    title.not_blank: Le titre de l'annonce ne doit pas être vide
+    company.not_blank: Le titre de la société ne doit pas être vide
+    country.not_blank: Le titre du pays ne doit pas être vide
+    city.not_blank: Le titre de la ville ne doit pas être vide
+    contract_type.not_blank: Le typde de contrat ne doit pas être vide
+    description:
+        not_blank: La description du poste ne doit pas être vide
+        length: La description du poste doit être plus longue

@@ -1,0 +1,32 @@
+home:
+    title: Accueil
+    description: >
+        Le 1<sup>er</sup> site d'offre d'emploie dédié à la communauté <strong>Symfony</strong>.<br />
+        <strong>Recruteurs</strong> Trouvez les talents à la source.<br />
+        <strong>Développeurs</strong> Trouvez la mission, l’entreprise ou le job de vos rêves.
+    countries: Toutes les pays
+    contract_type: Type de contract
+    all_contract_type: Tous types de contrats
+    location: Localisation
+    all_jobs: Voir toutes les offres
+    rss: Flux RSS
+    less: Moins
+    more: PLus
+
+header:
+    post_job: Poster une annonce
+    my_job: Mes annonces
+
+job:
+    how_to_apply: Comment postuler ?
+    errors: Erreurs
+    update: Mis à jour
+    preview: Aperçu
+    publish: Publier
+    make_changes: Modifier
+    label:
+        title: Titre de l'annonce
+        company: Société
+        contract_type: Type de contrat
+        city: Ville
+        how_to_apply: Envoyer votre CV et une lettre de motivation à ...

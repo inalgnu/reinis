@@ -23,19 +23,19 @@ class JobType extends AbstractType
         );
 
         $builder
-            ->add('title', 'text', array('attr' => array('placeholder' => 'Job Title')))
-            ->add('company', 'text', array('attr' => array('placeholder' => 'Company')))
+            ->add('title', 'text', array('attr' => array('placeholder' => 'job.label.title')))
+            ->add('company', 'text', array('attr' => array('placeholder' => 'job.label.company')))
             ->add('country', 'country')
             ->add('city', 'text', array(
-                'attr' => array('class' => 'location', 'placeholder' => 'City'),
+                'attr' => array('class' => 'location', 'placeholder' => 'job.label.city'),
                 'max_length' => 80
             ))
             ->add('contractType', 'choice', array(
-                'empty_value' => 'Type of contract',
+                'empty_value' => 'job.label.contract_type',
                 'choices' => array_combine($contractTypes, $contractTypes)
             ))
             ->add('description', 'textarea', array('attr' => array('style' => 'width: 100%', 'rows'  => 20, 'class' => 'ckeditor')))
-            ->add('howToApply', 'text', array('attr' => array('placeholder' => 'Send your resume at ...'), 'required' => false))
+            ->add('howToApply', 'text', array('attr' => array('placeholder' => 'job.label.how_to_apply'), 'required' => false))
         ;
     }
 

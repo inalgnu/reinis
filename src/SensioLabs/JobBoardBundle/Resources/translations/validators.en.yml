@@ -1,0 +1,9 @@
+job:
+    title.not_blank: Job title should not be empty
+    company.not_blank: Company title should not be empty
+    country.not_blank: Country title should not be empty
+    city.not_blank: City title should not be empty
+    contract_type.not_blank: Contract type should not be empty
+    description:
+        not_blank: Job description should not be empty
+        length: Job description must be longer
