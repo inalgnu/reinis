@@ -2,11 +2,9 @@
 
 namespace SensioLabs\JobBoardBundle\Test\Functional;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadJobData;
-use SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadJobFeedData;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 class JobControllerTest extends WebTestCase
 {
@@ -19,6 +17,11 @@ class JobControllerTest extends WebTestCase
         $purger = new ORMPurger($this->client->getContainer()->get('doctrine.orm.entity_manager'));
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
         $purger->purge();
+
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadUserData',
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadJobData'
+        ));
     }
 
     protected function tearDown()
@@ -42,7 +45,7 @@ class JobControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/post');
 
         $form = $crawler->selectButton('Preview')->form(array(
-            'job[title]' => 'Developer',
+            'job[title]' => 'Stage',
             'job[company]' => 'SensioLabs',
             'job[country]' => 'FR',
             'job[city]' => 'Paris',
@@ -54,11 +57,11 @@ class JobControllerTest extends WebTestCase
         $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/Internship/developer/preview'));
+        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/Internship/stage/preview'));
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertRegExp('/Developer/', $crawler->filter('.title')->text());
+        $this->assertRegExp('/Stage/', $crawler->filter('.title')->text());
         $this->assertRegExp('/SensioLabs/', $crawler->filter('.company')->text());
         $this->assertRegExp('/Paris, France/', $crawler->filter('.details')->text());
         $this->assertRegExp('/Internship/', $crawler->filter('.details')->text());
@@ -74,7 +77,7 @@ class JobControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('Update')->form();
 
-        $this->assertSame('Developer', $form['job[title]']->getValue());
+        $this->assertSame('Stage', $form['job[title]']->getValue());
         $this->assertSame('SensioLabs', $form['job[company]']->getValue());
         $this->assertSame('FR', $form['job[country]']->getValue());
         $this->assertSame('Paris', $form['job[city]']->getValue());
@@ -83,22 +86,20 @@ class JobControllerTest extends WebTestCase
         $this->assertSame('jobs@sensiolabs.com', $form['job[howToApply]']->getValue());
 
         // Update the title and check if the route parameter is correct
-        $form['job[title]'] = 'Developer 2';
+        $form['job[title]'] = 'Stage 2';
 
         $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/Internship/developer-2/preview'));
+        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/Internship/stage-2/preview'));
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertRegExp('/Developer 2/', $crawler->filter('.title')->text());
+        $this->assertRegExp('/Stage 2/', $crawler->filter('.title')->text());
     }
 
     public function testJobList()
     {
-        $this->loadFixtures();
-
         $crawler = $this->client->request('GET', '/');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -108,8 +109,6 @@ class JobControllerTest extends WebTestCase
 
     public function testJobListAjaxCall()
     {
-        $this->loadFixtures();
-
         // We simulate an ajax call in homepage
         $crawler = $this->client->request('GET', '/', array('page' => 2), array(), array(
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
@@ -122,7 +121,6 @@ class JobControllerTest extends WebTestCase
 
     public function testJobShow()
     {
-        $this->loadFixtures();
         $crawler = $this->client->request('GET', '/');
         $link = $crawler->selectLink('Developer 1')->link();
         $crawler = $this->client->click($link);
@@ -138,18 +136,10 @@ class JobControllerTest extends WebTestCase
 
     public function testFeed()
     {
-        $this->loadFixtures();
-
-        $crawler = $this->client->request('GET', '/rss');
+        $this->client->request('GET', '/rss');
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $jobs = new \SimpleXMLElement($this->client->getResponse()->getContent());
         $this->assertEquals('Jobs SensioLabs', $jobs->channel->title);
-    }
-
-    protected function loadFixtures()
-    {
-        $fixture = new LoadJobData();
-        $fixture->load($this->client->getContainer()->get('doctrine')->getManager());
     }
 }

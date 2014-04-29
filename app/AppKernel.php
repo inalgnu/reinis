@@ -30,6 +30,7 @@ class AppKernel extends Kernel
             new SensioLabs\BackendBundle\SensioLabsBackendBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new Eko\FeedBundle\EkoFeedBundle(),
+            new Liip\FunctionalTestBundle\LiipFunctionalTestBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

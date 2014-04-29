@@ -2,10 +2,9 @@
 
 namespace SensioLabs\JobBoardBundle\Test\Functional;
 
-use SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadUserData;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 class UserTest extends WebTestCase
 {
@@ -18,6 +17,8 @@ class UserTest extends WebTestCase
         $purger = new ORMPurger($this->client->getContainer()->get('doctrine.orm.entity_manager'));
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
         $purger->purge();
+
+        $this->loadFixtures(array('SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadUserData'));
     }
 
     protected function tearDown()
@@ -27,8 +28,6 @@ class UserTest extends WebTestCase
 
     public function testFormSubmissionAndRedirection()
     {
-        $this->loadFixtures();
-
         $this->client->request('GET', '/manage');
 
         $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
@@ -44,12 +43,5 @@ class UserTest extends WebTestCase
         $this->client->followRedirect();
 
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    }
-
-    protected function loadFixtures()
-    {
-        $fixture = new LoadUserData();
-        $fixture->setContainer($this->client->getContainer());
-        $fixture->load($this->client->getContainer()->get('doctrine')->getManager());
     }
 }

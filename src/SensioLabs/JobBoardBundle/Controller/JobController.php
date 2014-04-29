@@ -56,14 +56,10 @@ class JobController extends Controller
      * @Route("/{country_code}/{contract_type}/{slug}/preview", name="job_preview")
      * @Template()
      */
-    public function previewAction($slug)
+    public function previewAction(Request $request, Job $job)
     {
-        $em = $this->getDoctrine()->getManager();
-        $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneBySlug($slug);
-
-        if (!$job) {
-           throw $this->createNotFoundException(sprintf('Unable to find job with slug %s', $slug));
-        }
+        $jobManager = $this->container->get('sensiolabs.manager.job');
+        $jobManager->setJobIdInSession($request->getSession(), $job->getId());
 
         return array('job' => $job);
     }
@@ -81,21 +77,23 @@ class JobController extends Controller
         }
 
         $form = $this->createForm('job', $job);
-        $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            if (null === $job->getStatus()) {
-                $jobManager->createJob($job);
-                $jobManager->setJobIdInSession($request->getSession(), $job->getId());
-            } else {
-                $jobManager->updateJob($job);
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                if (null === $job->getStatus()) {
+                    $jobManager->createJob($job);
+                } else {
+                    $jobManager->updateJob($job);
+                }
+
+                return $this->redirect($this->generateUrl('job_preview', array(
+                    'country_code' => $job->getCountry(),
+                    'contract_type' => $job->getContractType(),
+                    'slug' => $job->getSlug(),
+                )));
             }
-
-            return $this->redirect($this->generateUrl('job_preview', array(
-                'country_code' => $job->getCountry(),
-                'contract_type' => $job->getContractType(),
-                'slug' => $job->getSlug(),
-            )));
         }
 
         return array('form' => $form->createView());
@@ -106,15 +104,10 @@ class JobController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @Template("SensioLabsJobBoardBundle:Job:post.html.twig")
      */
-    public function updateAction(Request $request, $slug)
+    public function updateAction(Request $request, Job $job)
     {
-        $user = $this->getUser();
-
-        $em = $this->getDoctrine()->getManager();
-        $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneBy(array('slug' => $slug));
-
-        if (!$job || $user !== $job->getUser()) {
-            throw $this->createNotFoundException(sprintf('Unable to find job with slug %s', $slug));
+        if ($job->getUser() !== $this->getUser()) {
+            throw new AccessDeniedException();
         }
 
         $this->container->get('sensiolabs.manager.job')->setJobIdInSession($request->getSession(), $job);
@@ -127,15 +120,8 @@ class JobController extends Controller
      * @Route("/{country_code}/{contract_type}/{slug}", name="job_show", requirements={"country_code"= "[A-Z]{2}" } )
      * @Template()
      */
-    public function showAction(Request $request, $slug)
+    public function showAction(Request $request, Job $job)
     {
-        $em = $this->getDoctrine()->getManager();
-        $job = $em->getRepository('SensioLabsJobBoardBundle:Job')->findOneBySlug($slug);
-
-        if (!$job) {
-            throw $this->createNotFoundException(sprintf('Unable to find job with slug %s', $slug));
-        }
-
         $viewCounter = $this->container->get('sensiolabs.service.view_counter');
         $viewCounter->incrementViewForRoute('job', $job->getId(), $request->attributes->get('_route'));
 
@@ -144,6 +130,7 @@ class JobController extends Controller
 
     /**
      * @Route("/manage/{page}", name="manage", defaults={"page" = 1})
+     * @Security("has_role('ROLE_USER')")
      * @Method("GET")
      * @Template()
      */
@@ -209,14 +196,20 @@ class JobController extends Controller
      */
     public function publishAction(Request $request, Job $job)
     {
-        if (!$job->getUser() === $this->getUser()) {
+        $jobManager = $this->container->get('sensiolabs.manager.job');
+
+        if (null === $job->getUser() && $job === $jobManager->getJobFromSession($request->getSession())) {
+            $jobManager->updateJob($job);
+        }
+
+        if ($job->getUser() !== $this->getUser()) {
             throw new AccessDeniedException();
         }
 
-        $jobManager = $this->container->get('sensiolabs.manager.job');
         $jobManager->publish($job);
+        $jobManager->removeJobIdFromSession($request->getSession());
 
-        return new RedirectResponse($request->headers->get('referer'));
+        return new RedirectResponse($this->generateUrl('manage'));
     }
 
     /**
@@ -224,16 +217,16 @@ class JobController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @Method("GET")
      */
-    public function deleteAction(Request $request, Job $job)
+    public function deleteAction(Job $job)
     {
-        if (!$job->getUser() === $this->getUser()) {
+        if ($job->getUser() !== $this->getUser()) {
             throw new AccessDeniedException();
         }
 
         $jobManager = $this->container->get('sensiolabs.manager.job');
         $jobManager->safeDelete($job);
 
-        return new RedirectResponse($request->headers->get('referer'));
+        return new RedirectResponse($this->generateUrl('manage'));
     }
 
     /**

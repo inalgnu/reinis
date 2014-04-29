@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "bd034494e45bc5826e8cdc1fcce53886",
+    "hash": "b567b6afa1e2ca7bd443d75862a5b2ac",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1361,6 +1361,63 @@
                 "http client"
             ],
             "time": "2013-05-19 03:41:15"
+        },
+        {
+            "name": "liip/functional-test-bundle",
+            "version": "dev-master",
+            "target-dir": "Liip/FunctionalTestBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/liip/LiipFunctionalTestBundle.git",
+                "reference": "e7480e6716913c553f34b22e4e8c33480a2b022e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/liip/LiipFunctionalTestBundle/zipball/e7480e6716913c553f34b22e4e8c33480a2b022e",
+                "reference": "e7480e6716913c553f34b22e4e8c33480a2b022e",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/common": "2.*",
+                "php": ">=5.3.2",
+                "symfony/browser-kit": "~2.0",
+                "symfony/framework-bundle": "~2.0"
+            },
+            "suggest": {
+                "doctrine/dbal": "Required when using the fixture loading functionality with an ORM and SQLite",
+                "doctrine/doctrine-fixtures-bundle": "Required when using the fixture loading functionality",
+                "doctrine/orm": "Required when using the fixture loading functionality with an ORM and SQLite"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Liip\\FunctionalTestBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Liip AG",
+                    "homepage": "http://www.liip.ch/"
+                },
+                {
+                    "name": "Community contributions",
+                    "homepage": "https://github.com/liip/LiipFunctionalTestBundle/contributors"
+                }
+            ],
+            "description": "This bundles provides additional functional test-cases for Symfony2 applications",
+            "keywords": [
+                "Symfony2"
+            ],
+            "time": "2014-04-02 22:28:13"
         },
         {
             "name": "monolog/monolog",
@@ -3396,7 +3453,8 @@
         "sonata-project/admin-bundle": 20,
         "sonata-project/doctrine-orm-admin-bundle": 20,
         "white-october/pagerfanta-bundle": 20,
-        "eko/feedbundle": 20
+        "eko/feedbundle": 20,
+        "liip/functional-test-bundle": 20
     },
     "platform": [
 

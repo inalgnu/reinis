@@ -73,10 +73,10 @@ stof_doctrine_extensions:
             timestampable: true
 
 sensio_labs_job_board:
-    admin_email: %sensio_labs_job_board.admin_email%
+    admin_email: %sensiolabs_jobboard.admin_email%
     max_per_page:
-        homepage: %sensio_labs_job_board.max_per_page.homepage%
-        manage: %sensio_labs_job_board.max_per_page.manage%
+        homepage: %sensiolabs_jobboard.max_per_page.homepage%
+        manage: %sensiolabs_jobboard.max_per_page.manage%
 
 fos_user:
     db_driver: orm
@@ -107,3 +107,5 @@ eko_feed:
             link:        'http://symfony.com'
             encoding:    'utf-8'
             author:      'SensioLabs'
+            
+liip_functional_test: ~

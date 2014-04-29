@@ -21,14 +21,13 @@
         <service id="sensiolabs.manager.job" class="SensioLabs\JobBoardBundle\Manager\JobManager">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="security.context" />
-            <argument type="service" id="mailer" />
-            <argument type="service" id="templating" />
+            <argument type="service" id="sensiolabs.service.mailer" />
             <argument>%sensio_labs_job_board.admin_email%</argument>
         </service>
         <service id="security.access.whitelist_voter" class="SensioLabs\JobBoardBundle\Security\Authorization\Voter\ApiHostVoter" public="false">
             <argument type="service" id="request_stack" strict="false" />
             <argument>%kernel.environment%</argument>
-            <argument>%sensio_labs_job_board.api_host_granted%</argument>
+            <argument>%api_host_granted%</argument>
             <tag name="security.voter" />
         </service>
         <service id="sensiolabs.service.view_counter" class="SensioLabs\JobBoardBundle\Service\ViewCounter">
@@ -37,6 +36,7 @@
         <service id="sensiolabs.service.mailer" class="SensioLabs\JobBoardBundle\Service\Mailer">
             <argument type="service" id="mailer" />
             <argument type="service" id="templating" />
+        </service>
         <service id="sensiolabs.locale_listener" class="SensioLabs\JobBoardBundle\EventListener\LocaleListener">
             <argument>%kernel.default_locale%</argument>
             <tag name="kernel.event_subscriber" />

@@ -18,7 +18,7 @@
                 <a href="{{ path('job_post') }}" class="green-button left"><span class="sprite-icon-light-arrow-left"></span>
                     <span>{{ 'job.make_changes'|trans }}</span>
                 </a>
-                <a href="#" class="green-button right"><img src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" class="sprite-icon-cloud-upload" />
+                <a href="{{ path('job_publish', {'id': job.id}) }}" class="green-button right"><img src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" class="sprite-icon-cloud-upload" />
                     <span>{{ 'job.publish'|trans }}</span>
                 </a>
             </div>

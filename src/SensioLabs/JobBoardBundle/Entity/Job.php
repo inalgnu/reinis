@@ -2,12 +2,10 @@
 
 namespace SensioLabs\JobBoardBundle\Entity;
 
-use SensioLabs\JobBoardBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util as Sluggable;
-use SensioLabs\JobBoardBundle\Exception\InvalidStatusUpdateException;
 use Eko\FeedBundle\Item\Writer\ItemInterface;
 
 /**
@@ -174,7 +172,7 @@ class Job implements ItemInterface
     /**
      * Set title
      *
-     * @param string $title
+     * @param  string $title
      * @return Job
      */
     public function setTitle($title)
@@ -197,7 +195,7 @@ class Job implements ItemInterface
     /**
      * Set company
      *
-     * @param string $company
+     * @param  string $company
      * @return Job
      */
     public function setCompany($company)
@@ -220,7 +218,7 @@ class Job implements ItemInterface
     /**
      * Set country
      *
-     * @param string $country
+     * @param  string $country
      * @return Job
      */
     public function setCountry($country)
@@ -243,7 +241,7 @@ class Job implements ItemInterface
     /**
      * Set city
      *
-     * @param string $city
+     * @param  string $city
      * @return Job
      */
     public function setCity($city)
@@ -266,7 +264,7 @@ class Job implements ItemInterface
     /**
      * Set contractType
      *
-     * @param string $contractType
+     * @param  string $contractType
      * @return Job
      */
     public function setContractType($contractType)
@@ -289,7 +287,7 @@ class Job implements ItemInterface
     /**
      * Set description
      *
-     * @param string $description
+     * @param  string $description
      * @return Job
      */
     public function setDescription($description)
@@ -312,7 +310,7 @@ class Job implements ItemInterface
     /**
      * Set howToApply
      *
-     * @param string $howToApply
+     * @param  string $howToApply
      * @return Job
      */
     public function setHowToApply($howToApply)
@@ -345,20 +343,20 @@ class Job implements ItemInterface
     /**
      * Set status
      *
-     * @param integer $status
+     * @param  integer $status
      * @return Job
      */
     public function setStatus($status)
     {
         $this->status = $status;
-    
+
         return $this;
     }
 
     /**
      * Get status
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatus()
     {
@@ -373,7 +371,7 @@ class Job implements ItemInterface
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -394,6 +392,8 @@ class Job implements ItemInterface
     public function setUser(User $user)
     {
         $this->user = $user;
+
+        return $this;
     }
 
     public function isPublished()
@@ -409,20 +409,20 @@ class Job implements ItemInterface
     /**
      * Set visibleFrom
      *
-     * @param \DateTime $visibleFrom
+     * @param  \DateTime $visibleFrom
      * @return Job
      */
     public function setVisibleFrom($visibleFrom)
     {
         $this->visibleFrom = $visibleFrom;
-    
+
         return $this;
     }
 
     /**
      * Get visibleFrom
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getVisibleFrom()
     {
@@ -432,20 +432,20 @@ class Job implements ItemInterface
     /**
      * Set visibleTo
      *
-     * @param \DateTime $visibleTo
+     * @param  \DateTime $visibleTo
      * @return Job
      */
     public function setVisibleTo($visibleTo)
     {
         $this->visibleTo = $visibleTo;
-    
+
         return $this;
     }
 
     /**
      * Get visibleTo
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getVisibleTo()
     {
@@ -473,7 +473,7 @@ class Job implements ItemInterface
     }
 
     /**
-     * @param \DateTime $deletedAt
+     * @param  \DateTime $deletedAt
      * @return $this
      */
     public function setDeletedAt(\DateTime $deletedAt)
@@ -492,18 +492,20 @@ class Job implements ItemInterface
     }
 
     /**
-     * @return bool
+     * @return string|bool
      */
     public function getTimeLeft()
     {
-        if ($this->visibleFrom && $this->visibleTo) {
-            $interval = $this->visibleFrom->diff($this->visibleTo);
+        $currentDate = new \DateTime();
 
-            if ($interval->d > 1) {
-                return $interval->format('%d day(s) left');
+        if (null !== $this->visibleTo) {
+            $interval = $currentDate->diff($this->visibleTo);
+
+            if ($interval->format('%a') == 0) {
+                return $interval->format('%h hour(s) left');
             }
 
-            return $interval->format('%h hour(s) left');
+            return $interval->format('%a day(s) left');
         }
 
         return false;

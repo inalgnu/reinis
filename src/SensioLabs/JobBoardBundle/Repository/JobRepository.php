@@ -15,15 +15,15 @@ use SensioLabs\JobBoardBundle\Entity\Job;
 class JobRepository extends EntityRepository
 {
     /**
-     * @param int $page
-     * @param string|null $countryCode
-     * @param string|null $contractType
-     * @param int $maxResults
+     * @param  int         $page
+     * @param  string|null $countryCode
+     * @param  string|null $contractType
+     * @param  int         $maxResults
      * @return array
      */
     public function getJobs($page = 1, $countryCode = null, $contractType = null, $maxResults = 10)
     {
-        if ((int)$page === 0) {
+        if ((int) $page === 0) {
             return;
         }
 
@@ -32,6 +32,9 @@ class JobRepository extends EntityRepository
         $qb = $this->createQueryBuilder('a')
             ->where('a.status = :status')
             ->setParameter('status', Job::STATUS_PUBLISHED)
+            ->andWhere('a.visibleFrom <= :current_date')
+            ->andWhere('a.visibleTo >= :current_date')
+            ->setParameter('current_date', new \DateTime())
             ->setFirstResult($offset)
             ->setMaxResults($maxResults)
         ;
@@ -73,6 +76,7 @@ class JobRepository extends EntityRepository
     }
 
     /**
+     * @param  UserInterface       $user
      * @return \Doctrine\ORM\Query
      */
     public function getByUserQuery(UserInterface $user)
@@ -80,6 +84,7 @@ class JobRepository extends EntityRepository
         $qb = $this->createQueryBuilder('j')
             ->where('j.user = :user')
             ->setParameter('user', $user)
+            ->addOrderBy('j.createdAt', 'DESC')
         ;
 
         return $qb->getQuery();
@@ -94,6 +99,9 @@ class JobRepository extends EntityRepository
             ->select('count(c) as number, c.country')
             ->where('c.status = :status')
             ->setParameter('status', Job::STATUS_PUBLISHED)
+            ->andWhere('c.visibleFrom <= :current_date')
+            ->andWhere('c.visibleTo >= :current_date')
+            ->setParameter('current_date', new \DateTime())
             ->groupBy('c.country')
         ;
 
@@ -109,6 +117,9 @@ class JobRepository extends EntityRepository
             ->select('count(c) as number, c.contractType')
             ->where('c.status = :status')
             ->setParameter('status', Job::STATUS_PUBLISHED)
+            ->andWhere('c.visibleFrom <= :current_date')
+            ->andWhere('c.visibleTo >= :current_date')
+            ->setParameter('current_date', new \DateTime())
             ->groupBy('c.contractType')
         ;
 

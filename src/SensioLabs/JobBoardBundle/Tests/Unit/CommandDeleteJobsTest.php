@@ -7,7 +7,7 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use SensioLabs\JobBoardBundle\Entity\Job;
 use Symfony\Component\Process\Process;
 
-class CommandDeleteJobs extends WebTestCase
+class CommandDeleteJobsTest extends WebTestCase
 {
     protected $em;
 
