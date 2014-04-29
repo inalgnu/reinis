@@ -56,13 +56,13 @@ class ApiTest extends WebTestCase
         $jsonResponse = $this->client->getResponse()->getContent();
         $jobApi = json_decode($jsonResponse, true);
 
-        $this->assertSame('Developer 1', $jobApi['title']);
+        $this->assertRegExp('/Developer/',$jobApi['title']);
         $this->assertSame('Paris', $jobApi['city']);
         $this->assertSame('SensioLabs', $jobApi['company']);
         $this->assertSame('FR', $jobApi['country_code']);
         $this->assertSame('France', $jobApi['country_name']);
         $this->assertSame('Full Time', $jobApi['contract']);
-        $this->assertSame('/FR/Full%20Time/developer-1', $jobApi['url']);
+        $this->assertRegExp('#/FR/Full%20Time/developer#', $jobApi['url']);
     }
 
     protected function loadFixtures()
