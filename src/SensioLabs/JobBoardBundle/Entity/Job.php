@@ -2,10 +2,12 @@
 
 namespace SensioLabs\JobBoardBundle\Entity;
 
+use SensioLabs\JobBoardBundle\Entity\User;
+use SensioLabs\JobBoardBundle\Entity\Location;
+use SensioLabs\JobBoardBundle\Entity\Company;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Sluggable\Util as Sluggable;
 use Eko\FeedBundle\Item\Writer\ItemInterface;
 
 /**
@@ -58,31 +60,10 @@ class Job implements ItemInterface
     private $slug;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="company", type="string", length=255)
-     *
-     * @Assert\NotBlank(message="job.company.not_blank")
-     */
-    private $company;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="country", type="string", length=2)
-     *
-     * @Assert\NotBlank(message="job.country.not_blank")
+     * @ORM\ManyToOne(targetEntity="Company", cascade={"persist"}, inversedBy="jobs")
      */
-    private $country;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="city", type="string", length=64)
-     *
-     * @Assert\NotBlank(message="job.city.not_blank")
-     */
-    private $city;
+    private $firm;
 
     /**
      * @var string
@@ -155,9 +136,20 @@ class Job implements ItemInterface
     private $visibleTo;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="jobs")
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Location", cascade={"persist"}, inversedBy="jobs")
+     */
+    private $location;
+
+    function __construct()
+    {
+        $this->location = new Location();
+        $this->firm = new Company();
+    }
 
     /**
      * Get id
@@ -200,7 +192,7 @@ class Job implements ItemInterface
      */
     public function setCompany($company)
     {
-        $this->company = $company;
+        $this->firm->setTitle($company);
 
         return $this;
     }
@@ -212,53 +204,7 @@ class Job implements ItemInterface
      */
     public function getCompany()
     {
-        return $this->company;
-    }
-
-    /**
-     * Set country
-     *
-     * @param  string $country
-     * @return Job
-     */
-    public function setCountry($country)
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
-    /**
-     * Get country
-     *
-     * @return string
-     */
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    /**
-     * Set city
-     *
-     * @param  string $city
-     * @return Job
-     */
-    public function setCity($city)
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    /**
-     * Get city
-     *
-     * @return string
-     */
-    public function getCity()
-    {
-        return $this->city;
+        return $this->firm ? $this->firm->getTitle() : null;
     }
 
     /**
@@ -443,6 +389,22 @@ class Job implements ItemInterface
     }
 
     /**
+     * @return Location
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param mixed $location
+     */
+    public function setLocation(Location $location)
+    {
+        $this->location = $location;
+    }
+
+    /**
      * Get visibleTo
      *
      * @return \DateTime
@@ -479,8 +441,6 @@ class Job implements ItemInterface
     public function setDeletedAt(\DateTime $deletedAt)
     {
         $this->deletedAt = $deletedAt;
-
-        return $this;
     }
 
     /**
@@ -529,5 +489,69 @@ class Job implements ItemInterface
     public function getFeedItemLink()
     {
         return 'http://symfony.com';
+    }
+
+    /**
+     * Set country
+     *
+     * @param string $country
+     * @return Job
+     */
+    public function setCountry($country)
+    {
+        $this->location->setCountry($country);
+
+        return $this;
+    }
+
+    /**
+     * Get Country
+     *
+     * @return string
+     */
+    public function getCountry()
+    {
+        return $this->location ? $this->location->getCountry() : null;
+    }
+
+    /**
+     * Set city
+     *
+     * @param string $city
+     * @return Job
+     */
+    public function setCity($city)
+    {
+        $this->location->setCity($city);
+
+        return $this;
+    }
+
+    /**
+     * Get city
+     *
+     * @return string
+     */
+    public function getCity()
+    {
+        return $this->location ? $this->location->getCity() : null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirm()
+    {
+        return $this->firm;
+    }
+
+    /**
+     * @param mixed $firm
+     */
+    public function setFirm($firm)
+    {
+        $this->firm = $firm;
+
+        return $this;
     }
 }
