@@ -108,4 +108,19 @@ class JobRepository extends EntityRepository
 
         return $query;
     }
+
+    public function hardDelete()
+    {
+        $now = new \Datetime();
+        $now->modify('-20 day');
+        $qb = $this->createQueryBuilder('j')
+            ->delete()
+            ->where('j.deletedAt < :now')
+            ->andWhere('j.status = :status')
+            ->setParameter('now', $now)
+            ->setParameter('status', Job::STATUS_DELETED)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }
