@@ -28,13 +28,5 @@ php app/console assetic:dump
 php app/console doctrine:database:create --env=test
 php app/console doctrine:schema:create --env=test
 
-phpunit -c app/
-```
-
-###### with casperjs :
-
-```
-php app/console doctrine:fixtures:load
-
-casperjs test casper-tests/list.js --url=http://yourapp.dev/app_dev.php
+. tests.sh http://yourapp.dev/app_test.php
 ```
