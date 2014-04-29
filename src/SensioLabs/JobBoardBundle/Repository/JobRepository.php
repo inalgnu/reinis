@@ -36,19 +36,40 @@ class JobRepository extends EntityRepository
             ->setMaxResults($maxResults)
         ;
 
+        $qb = $this->setFiltersQB($qb, $countryCode, $contractType);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getFeed($countryCode = null, $contractType = null)
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->where('a.status = :status')
+            ->setParameter('status', Job::STATUS_PUBLISHED)
+            ->andWhere('a.visibleFrom <= :current_date')
+            ->andWhere('a.visibleTo >= :current_date')
+            ->setParameter('current_date', new \DateTime())
+        ;
+        $qb = $this->setFiltersQB($qb, $countryCode, $contractType);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function setFiltersQB($qb, $countryCode = null, $contractType = null)
+    {
         if ($countryCode) {
             $qb->andWhere('a.country = :country_code')
-               ->setParameter('country_code', $countryCode)
+                ->setParameter('country_code', $countryCode)
             ;
         }
 
         if ($contractType) {
             $qb->andWhere('a.contractType = :contract_type')
-               ->setParameter('contract_type', $contractType)
+                ->setParameter('contract_type', $contractType)
             ;
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb;
     }
 
     /**
@@ -111,13 +132,11 @@ class JobRepository extends EntityRepository
 
     public function hardDelete()
     {
-        $now = new \Datetime();
-        $now->modify('-20 day');
         $qb = $this->createQueryBuilder('j')
             ->delete()
-            ->where('j.deletedAt < :now')
+            ->where('j.deletedAt < :current_date')
             ->andWhere('j.status = :status')
-            ->setParameter('now', $now)
+            ->setParameter('current_date', new \Datetime('-20 day'))
             ->setParameter('status', Job::STATUS_DELETED)
         ;
 

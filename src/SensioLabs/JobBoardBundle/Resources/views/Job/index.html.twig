@@ -74,7 +74,7 @@
             </li>
         </ul>
         <div class="feed">
-            <a href="#">
+            <a href="{{ path('job_feed', (app.request.query.all)) }}">
                 <img src="{{ asset('bundles/sensiolabsjobboard/images/rss.png') }}" width="16" height="16" />
                 <span>{{ 'home.rss'|trans }}</span>
             </a>

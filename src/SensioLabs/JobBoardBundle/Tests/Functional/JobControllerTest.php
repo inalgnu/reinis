@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadJobData;
+use SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadJobFeedData;
 
 class JobControllerTest extends WebTestCase
 {
@@ -133,6 +134,17 @@ class JobControllerTest extends WebTestCase
         $this->assertRegExp('/Full Time/', $crawler->filter('.details')->text());
         $this->assertRegExp('/Lorem ipsum dolor sit amet, consectetur adipisicing elit/', $crawler->filter('.description')->text());
         $this->assertRegExp('/jobs@sensiolabs.com/', $crawler->filter('.how-to-apply')->text());
+    }
+
+    public function testFeed()
+    {
+        $this->loadFixtures();
+
+        $crawler = $this->client->request('GET', '/rss');
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        $jobs = new \SimpleXMLElement($this->client->getResponse()->getContent());
+        $this->assertEquals('Jobs SensioLabs', $jobs->channel->title);
     }
 
     protected function loadFixtures()

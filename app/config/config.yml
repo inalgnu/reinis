@@ -98,3 +98,12 @@ sonata_block:
 
 sonata_admin:
     title: Backend
+
+eko_feed:
+    feeds:
+        job:
+            title:       'Jobs SensioLabs'
+            description: 'Jobs SensioLabs'
+            link:        'http://symfony.com'
+            encoding:    'utf-8'
+            author:      'SensioLabs'

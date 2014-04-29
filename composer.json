@@ -30,7 +30,8 @@
         "snc/redis-bundle": "1.1.*@dev",
         "sonata-project/admin-bundle": "2.2.*@dev",
         "sonata-project/doctrine-orm-admin-bundle": "2.2.*@dev",
-        "white-october/pagerfanta-bundle": "1.0.*@dev"
+        "white-october/pagerfanta-bundle": "1.0.*@dev",
+        "eko/feedbundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [

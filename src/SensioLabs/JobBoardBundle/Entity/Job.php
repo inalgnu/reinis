@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util as Sluggable;
 use SensioLabs\JobBoardBundle\Exception\InvalidStatusUpdateException;
+use Eko\FeedBundle\Item\Writer\ItemInterface;
 
 /**
  * Job
@@ -15,7 +16,7 @@ use SensioLabs\JobBoardBundle\Exception\InvalidStatusUpdateException;
  * @ORM\Table(name="sl_job")
  * @ORM\Entity(repositoryClass="SensioLabs\JobBoardBundle\Repository\JobRepository")
  */
-class Job
+class Job implements ItemInterface
 {
     const FULL_TIME = 'Full Time';
     const PART_TIME = 'Part Time';
@@ -506,5 +507,25 @@ class Job
         }
 
         return false;
+    }
+
+    public function getFeedItemTitle()
+    {
+        return $this->title;
+    }
+
+    public function getFeedItemDescription()
+    {
+        return $this->description;
+    }
+
+    public function getFeedItemPubDate()
+    {
+        return $this->visibleFrom;
+    }
+
+    public function getFeedItemLink()
+    {
+        return 'http://symfony.com';
     }
 }

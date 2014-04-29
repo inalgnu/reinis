@@ -2,6 +2,7 @@
 
 namespace SensioLabs\JobBoardBundle\Controller;
 
+use Eko\FeedBundle\Field\Item\ItemField;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -17,6 +18,7 @@ use SensioLabs\JobBoardBundle\Entity\Job;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\HttpFoundation\Response;
 
 class JobController extends Controller
 {
@@ -232,5 +234,29 @@ class JobController extends Controller
         $jobManager->safeDelete($job);
 
         return new RedirectResponse($request->headers->get('referer'));
+    }
+
+    /**
+     * Generate the article feed
+     *
+     * @Route("/rss", name="job_feed")
+     * @return Response XML Feed
+     */
+    public function feedAction(Request $request)
+    {
+        $country = $request->query->get('country');
+        $contractType = $request->query->get('contract-type');
+
+        $jobs = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Job')->getFeed($country, $contractType);
+
+        $feed = $this->get('eko_feed.feed.manager')->get('job');
+        $feed->addFromArray($jobs);
+        $feed->addItemField(new ItemField('company', 'getCompany'));
+        $feed->addItemField(new ItemField('country', 'getCountry'));
+        $feed->addItemField(new ItemField('city', 'getCity'));
+        $feed->addItemField(new ItemField('contractType', 'getContractType'));
+        $feed->addItemField(new ItemField('howToApply', 'getHowToApply'));
+
+        return new Response($feed->render('rss'));
     }
 }
