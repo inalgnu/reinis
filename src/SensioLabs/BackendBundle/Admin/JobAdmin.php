@@ -12,6 +12,8 @@ use SensioLabs\JobBoardBundle\Service\Mailer;
 
 class JobAdmin extends Admin
 {
+    protected $uniqid = 'job';
+
     protected $baseRoutePattern = '/';
 
     protected $datagridValues = array(
@@ -90,10 +92,10 @@ class JobAdmin extends Admin
         );
 
         $formMapper
-            ->add('title', null, array('attr' => array('class' => '')))
-            ->add('company', null, array('attr' => array('class' => '')))
+            ->add('title', 'text', array('attr' => array('class' => '')))
+            ->add('company', 'text', array('attr' => array('class' => '')))
             ->add('country', 'country', array('attr' => array('class' => '')))
-            ->add('city', null, array('attr' => array('class' => '')))
+            ->add('city', 'text', array('attr' => array('class' => '')))
             ->add('contractType', 'choice', array('attr' => array('class' => ''), 'choices' => array_combine($contractTypes, $contractTypes)))
             ->add('visibleFrom', 'date', array('attr' => array('class' => ''), 'widget' => 'single_text'))
             ->add('visibleTo', 'date', array('attr' => array('class' => ''), 'widget' => 'single_text'))
