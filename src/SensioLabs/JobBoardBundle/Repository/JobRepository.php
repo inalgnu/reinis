@@ -35,6 +35,7 @@ class JobRepository extends EntityRepository
             ->andWhere('a.visibleFrom <= :current_date')
             ->andWhere('a.visibleTo >= :current_date')
             ->setParameter('current_date', new \DateTime())
+            ->addOrderBy('a.createdAt', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($maxResults)
         ;

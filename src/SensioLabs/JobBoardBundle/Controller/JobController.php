@@ -104,13 +104,12 @@ class JobController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @Template("SensioLabsJobBoardBundle:Job:post.html.twig")
      */
-    public function updateAction(Request $request, Job $job)
+    public function updateAction(Job $job)
     {
         if ($job->getUser() !== $this->getUser()) {
             throw new AccessDeniedException();
         }
 
-        $this->container->get('sensiolabs.manager.job')->setJobIdInSession($request->getSession(), $job);
         $form = $this->createForm('job', $job);
 
         return array('form' =>  $form->createView());
