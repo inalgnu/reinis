@@ -35,6 +35,10 @@ class LoadJobData extends AbstractFixture implements OrderedFixtureInterface
                 ->setVisibleTo(new \DateTime('tomorrow'))
             ;
 
+            if ($i == 1) {
+                $job->setCreatedAt(new \DateTime('tomorrow'));
+            }
+
             if ($i > 20) {
                 $job->setCountry('GB')
                     ->setCity('London')

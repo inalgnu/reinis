@@ -554,4 +554,15 @@ class Job implements ItemInterface
 
         return $this;
     }
+
+    /**
+     * @param $createdAt
+     * @return $this
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
 }
