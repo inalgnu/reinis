@@ -1,31 +1,24 @@
 security:
-    role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+    encoders:
+        Sensiolabs\JobBoardBundle\Entity\User: plaintext
 
     providers:
-        fos_userbundle:
-            id: fos_user.user_provider.username
+        sensiolabs_connect:
+            id: sensiolabs.user_repository
 
     firewalls:
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
         secured_area:
-            pattern:    ^/
-            logout:     true
-            anonymous:  true
-            form_login:
-                provider: fos_userbundle
-                csrf_provider: form.csrf_provider
+            sensiolabs_connect:
+                check_path:  oauth_callback
+                provider:    sensiolabs_connect
+            logout:
+              path:   oauth_logout
+              target: /
+            anonymous: true
 
     access_control:
         - { path: ^/manage, roles: ROLE_USER }
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/backend, role: ROLE_ADMIN }
-
-    encoders:
-        FOS\UserBundle\Model\UserInterface: sha512

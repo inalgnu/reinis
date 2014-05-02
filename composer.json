@@ -30,7 +30,8 @@
         "sonata-project/doctrine-orm-admin-bundle": "2.2.*@dev",
         "white-october/pagerfanta-bundle": "1.0.*@dev",
         "eko/feedbundle": "1.1.*@dev",
-        "liip/functional-test-bundle": "1.0.*@dev"
+        "liip/functional-test-bundle": "1.0.*@dev",
+        "sensiolabs/connect-bundle": "~2.0"
     },
     "scripts": {
         "post-install-cmd": [

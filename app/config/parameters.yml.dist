@@ -27,5 +27,6 @@ parameters:
     sensiolabs_jobboard.admin_email: admin@example.com
     sensiolabs_jobboard.max_per_page.homepage: 10
     sensiolabs_jobboard.max_per_page.manage: 25
+    sensiolabs_jobboard.administrators: [cc649fb3-155f-4016-acd4-0e7e01fd57ae]
 
     api_host_granted: [symfony.com, sensiolabs.com]

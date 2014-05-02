@@ -1,0 +1,21 @@
+<script>
+    (function(w, d, s) {
+        function go() {
+            var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+                if (d.getElementById(id)) {return;}
+                js = d.createElement(s); js.src = url; js.id = id;
+                fjs.parentNode.insertBefore(js, fjs);
+            };
+            load('https://connect.sensiolabs.com/sln.js?customize_url={{ url('sln_customizer') }}', 'sln_bar');
+        }
+        if (w.addEventListener) { w.addEventListener("load", go, false); }
+        else if (w.attachEvent) { w.attachEvent("onload",go); }
+    } (window, document, 'script'));
+    (function () {
+        var s = document.createElement('link');
+        s.rel = 'stylesheet';
+        s.href = 'https://connect.sensiolabs.com/css/sln.css';
+        var x = document.getElementsByTagName('title')[0];
+        x.parentNode.insertBefore(s, x);
+    })();
+</script>

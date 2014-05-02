@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "eafe094382ce286ee5a389c226650ba7",
+    "hash": "bf3443c99085d78cd1fd6e770ff12de1",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1817,6 +1817,106 @@
             ],
             "description": "This bundle generates code for you",
             "time": "2013-08-21 18:09:35"
+        },
+        {
+            "name": "sensiolabs/connect",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sensiolabs/connect.git",
+                "reference": "d48216ffc3f902ca09720d8ed247472330d7352c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sensiolabs/connect/zipball/d48216ffc3f902ca09720d8ed247472330d7352c",
+                "reference": "d48216ffc3f902ca09720d8ed247472330d7352c",
+                "shasum": ""
+            },
+            "require": {
+                "kriswallsmith/buzz": "~0.8",
+                "psr/log": "1.0.0"
+            },
+            "require-dev": {
+                "symfony/form": "~2.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "SensioLabs": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marc Weistroff",
+                    "email": "marc.weistroff@sensiolabs.com",
+                    "homepage": "http://sensiolabs.com"
+                }
+            ],
+            "description": "SensioLabs Connect SDK",
+            "homepage": "https://github.com/sensiolabs/connect",
+            "keywords": [
+                "SensioLabs Connect",
+                "sdk"
+            ],
+            "time": "2013-12-23 15:11:17"
+        },
+        {
+            "name": "sensiolabs/connect-bundle",
+            "version": "v2.0.0",
+            "target-dir": "SensioLabs/Bundle/ConnectBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sensiolabs/SensioLabsConnectBundle.git",
+                "reference": "f5ba9591e7bd52c54404de2e06a1ce3b5f004d71"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sensiolabs/SensioLabsConnectBundle/zipball/f5ba9591e7bd52c54404de2e06a1ce3b5f004d71",
+                "reference": "f5ba9591e7bd52c54404de2e06a1ce3b5f004d71",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "sensiolabs/connect": "~2.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "SensioLabs\\Bundle\\ConnectBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "SensioLabs",
+                    "email": "contact@sensiolabs.com"
+                }
+            ],
+            "description": "Official bundle for the SensioLabs Connect SDK",
+            "homepage": "https://github.com/sensiolabs/SensioConnectBundle",
+            "keywords": [
+                "SensioLabs Connect"
+            ],
+            "time": "2013-12-26 15:30:42"
         },
         {
             "name": "snc/redis-bundle",

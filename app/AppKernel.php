@@ -19,7 +19,6 @@ class AppKernel extends Kernel
             new SensioLabs\JobBoardBundle\SensioLabsJobBoardBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
-            new FOS\UserBundle\FOSUserBundle(),
             new Snc\RedisBundle\SncRedisBundle(),
             new Sonata\CoreBundle\SonataCoreBundle(),
             new Sonata\BlockBundle\SonataBlockBundle(),
@@ -31,6 +30,7 @@ class AppKernel extends Kernel
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new Eko\FeedBundle\EkoFeedBundle(),
             new Liip\FunctionalTestBundle\LiipFunctionalTestBundle(),
+            new SensioLabs\Bundle\ConnectBundle\SensioLabsConnectBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
