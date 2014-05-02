@@ -5,6 +5,7 @@ namespace SensioLabs\JobBoardBundle\Test\Functional;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Symfony\Component\Process\Process;
 
 class JobControllerTest extends WebTestCase
 {
@@ -27,6 +28,12 @@ class JobControllerTest extends WebTestCase
     protected function tearDown()
     {
         $this->client = null;
+    }
+
+    protected function elasticRefresh()
+    {
+        $process = new Process('php app/console fos:elastica:populate --env=test');
+        $process->run();
     }
 
     public function testResponseIsSuccessful()
@@ -100,6 +107,7 @@ class JobControllerTest extends WebTestCase
 
     public function testJobList()
     {
+        $this->elasticRefresh();
         $crawler = $this->client->request('GET', '/');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -109,6 +117,8 @@ class JobControllerTest extends WebTestCase
 
     public function testJobListAjaxCall()
     {
+        $this->elasticRefresh();
+
         // We simulate an ajax call in homepage
         $crawler = $this->client->request('GET', '/', array('page' => 2), array(), array(
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
@@ -121,6 +131,7 @@ class JobControllerTest extends WebTestCase
 
     public function testJobShow()
     {
+        $this->elasticRefresh();
         $crawler = $this->client->request('GET', '/');
         $link = $crawler->selectLink('Developer 1')->link();
         $crawler = $this->client->click($link);

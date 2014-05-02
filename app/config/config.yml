@@ -112,3 +112,29 @@ sensio_labs_connect:
     app_id:     e80d8af8cbcdeaa454e9ab522addbef5b9136107979f353e8107d40bff261b02
     app_secret: 4e578644fab0f8854595e607fc10df50b1e591d7c0ea6c845e8c61df60ae5c92
     scope:      SCOPE_EMAIL SCOPE_PUBLIC
+
+fos_elastica:
+    clients:
+        default: { host: localhost, port: 9200 }
+    indexes:
+        jobs:
+            client: default
+            types:
+                Job:
+                    mappings:
+                        title: { type: string }
+                        description: { type: string }
+                        country: { type: string, index: not_analyzed}
+                        city: { type: string }
+                        contractType: { type: string, index: not_analyzed}
+                        company: { type: string }
+                    persistence:
+                        driver: orm
+                        model: SensioLabs\JobBoardBundle\Entity\Job
+                        provider:
+                            query_builder_method: createSearchIndexQueryBuilder
+                        listener:
+                            is_indexable_callback: isPublic
+                        finder: ~
+                        elastica_to_model_transformer:
+                            service: sensiolabs.elastica.job_transformer

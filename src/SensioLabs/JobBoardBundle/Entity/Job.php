@@ -347,6 +347,13 @@ class Job implements ItemInterface
         return $this->status === self::STATUS_PUBLISHED;
     }
 
+    public function isPublic()
+    {
+        $currentDate = new \DateTime();
+
+        return $this->visibleFrom <= $currentDate && $this->visibleTo >= $currentDate && $this->isPublished();
+    }
+
     public function isDeleted()
     {
         return $this->status === self::STATUS_DELETED;

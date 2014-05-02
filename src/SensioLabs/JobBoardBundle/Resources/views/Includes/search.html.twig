@@ -1,0 +1,6 @@
+<form class="search-jobs" type="GET">
+    {% if app.request.query.has('contract-type') %}<input name="contract-type" type="hidden" value="{{ app.request.query.get('contract-type') }}">{% endif %}
+    {% if app.request.query.has('country') %}<input name="contract-type" type="hidden" value="{{ app.request.query.get('country') }}">{% endif %}
+    <input name="q" id="inputField" type="text" class="query" autocomplete="off" placeholder="{{ 'home.search'|trans }}" value="{{ app.request.query.get('q') }}">
+    <button class="btn btn-large btn-primary" type="submit">Search</button>
+</form>

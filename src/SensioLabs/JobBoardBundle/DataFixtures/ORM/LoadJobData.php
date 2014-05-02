@@ -50,6 +50,14 @@ class LoadJobData extends AbstractFixture implements OrderedFixtureInterface
                 }
             }
 
+            if ($i > 30) {
+                $job->setTitle('Best Developer '. $i);
+            }
+
+            if ($i > 35) {
+                $job->setCompany('Microsoft');
+            }
+
             $manager->persist($job);
         }
 

@@ -12,6 +12,7 @@ home:
     rss: Flux RSS
     less: Moins
     more: PLus
+    search: Nom du poste, mot clé, société, ville…
 
 header:
     post_job: Poster une annonce
