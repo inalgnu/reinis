@@ -25,6 +25,7 @@ class SensioLabsJobBoardExtension extends Extension
         $container->setParameter('sensio_labs_job_board.max_per_page.homepage', $config['max_per_page']['homepage']);
         $container->setParameter('sensio_labs_job_board.max_per_page.manage', $config['max_per_page']['manage']);
         $container->setParameter('sensio_labs_job_board.administrators', $config['administrators']);
+        $container->setParameter('sensio_labs_job_board.api_host_granted', $config['api_host_granted']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');

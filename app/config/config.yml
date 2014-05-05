@@ -80,6 +80,7 @@ sensio_labs_job_board:
         homepage: %sensiolabs_jobboard.max_per_page.homepage%
         manage: %sensiolabs_jobboard.max_per_page.manage%
     administrators: %sensiolabs_jobboard.administrators%
+    api_host_granted: %sensiolabs_jobboard.api_host_granted%
 
 snc_redis:
     clients:
