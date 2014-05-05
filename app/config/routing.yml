@@ -3,25 +3,6 @@ sensio_labs_job_board:
     type:     annotation
     prefix:   /
 
-fos_user_security:
-    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
-
-fos_user_profile:
-    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
-    prefix: /profile
-
-fos_user_register:
-    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
-    prefix: /register
-
-fos_user_resetting:
-    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
-    prefix: /resetting
-
-fos_user_change_password:
-    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
-    prefix: /profile
-
 backend:
     pattern:  /backend
     defaults: { _controller: SensioLabsBackendBundle:JobAdmin:list, _sonata_admin: sonata.admin.job }
@@ -34,3 +15,9 @@ _sonata_admin:
     resource: .
     type: sonata_admin
     prefix: /backend
+
+_sensiolabs_connect:
+    resource: @SensioLabsConnectBundle/Resources/config/routing.xml
+
+oauth_logout:
+    pattern: /session/logout

@@ -2,9 +2,11 @@
 
 namespace SensioLabs\BackendBundle\Test\Functional;
 
+use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use SensioLabs\Connect\Security\Authentication\Token\ConnectToken;
 
 class JobControllerTest extends WebTestCase
 {
@@ -29,55 +31,9 @@ class JobControllerTest extends WebTestCase
         $this->client = null;
     }
 
-    public function testUserLogToBackend()
-    {
-        $this->client->request('GET', '/backend');
-
-        $this->assertSame(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
-
-        $crawler = $this->client->followRedirect();
-
-        $form = $crawler->selectButton('Login')->form(array(
-            '_username' => 'skigun',
-            '_password' => 'password',
-        ));
-
-        $this->client->submit($form);
-
-        $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
-
-        $this->client->followRedirect();
-
-        $this->assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testAdminLogToBackend()
-    {
-        $this->client->request('GET', '/backend');
-
-        $this->assertSame(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
-
-        $crawler = $this->client->followRedirect();
-
-        $form = $crawler->selectButton('Login')->form(array(
-            '_username' => 'admin',
-            '_password' => 'admin',
-        ));
-
-        $this->client->submit($form);
-
-        $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
-
-        $this->client->followRedirect();
-
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    }
-
     public function testJobList()
     {
-        $this->submitLoginForm();
-
-        $crawler = $this->client->followRedirect();
+        $crawler = $this->logIn();
 
         $this->assertRegExp('/Published ads/', $crawler->filter('.big-title')->text());
         $this->assertCount(25, $crawler->filter('.box tbody tr'));
@@ -97,9 +53,7 @@ class JobControllerTest extends WebTestCase
 
     public function testJobEdit()
     {
-        $this->submitLoginForm();
-
-        $crawler = $this->client->followRedirect();
+        $crawler = $this->logIn();
 
         $link = $crawler->selectLink('Edit')->link();
         $crawler = $this->client->click($link);
@@ -128,9 +82,7 @@ class JobControllerTest extends WebTestCase
 
     public function testSoftDeleteAndRestore()
     {
-        $this->submitLoginForm();
-
-        $crawler = $this->client->followRedirect();
+        $crawler = $this->logIn();
 
         $link = $crawler->selectLink('Delete')->link();
         $this->client->click($link);
@@ -172,16 +124,20 @@ class JobControllerTest extends WebTestCase
         $this->assertCount(0, $crawler->filter('.box tbody tr'));
     }
 
-    private function submitLoginForm()
+    private function logIn()
     {
-        $this->client->request('GET', '/backend');
-        $crawler = $this->client->followRedirect();
+        $session = $this->client->getContainer()->get('session');
 
-        $form = $crawler->selectButton('Login')->form(array(
-            '_username' => 'admin',
-            '_password' => 'admin',
-        ));
+        $user = $this->getContainer()->get('sensiolabs.user_repository')->loadUserByUsername('cc649fb3-155f-4016-acd4-0e7e01fd57ae');
 
-        $this->client->submit($form);
+        $firewall = 'secured_area';
+        $token = new ConnectToken($user->getUuid(), null, null, 'toto');
+        $session->set('_security_'.$firewall, serialize($token));
+        $session->save();
+
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
+
+        return $this->client->request('GET', '/backend');
     }
 }

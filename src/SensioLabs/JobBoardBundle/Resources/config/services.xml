@@ -44,5 +44,15 @@
         <service id="sensiolabs.event_listener.job" class="SensioLabs\JobBoardBundle\EventListener\JobSubscriber">
             <tag name="doctrine.event_listener" event="prePersist" />
         </service>
+        <service id="sensiolabs.event_listener.interactive_login" class="Sensiolabs\JobBoardBundle\EventListener\SecurityInteractiveLoginListener">
+            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
+        <service id="sensiolabs.user_repository" class="Sensiolabs\JobBoardBundle\Repository\UserRepository" factory-service="doctrine" factory-method="getRepository">
+            <argument>SensioLabsJobBoardBundle:User</argument>
+            <call method="setAdminUuids">
+                <argument>%sensio_labs_job_board.administrators%</argument>
+            </call>
+        </service>
     </services>
 </container>

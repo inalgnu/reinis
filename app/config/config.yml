@@ -26,6 +26,8 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
+    globals:
+        sln_js:       "%sensiolabs_connect.sln_js%"
 
 # Assetic Configuration
 assetic:
@@ -77,11 +79,7 @@ sensio_labs_job_board:
     max_per_page:
         homepage: %sensiolabs_jobboard.max_per_page.homepage%
         manage: %sensiolabs_jobboard.max_per_page.manage%
-
-fos_user:
-    db_driver: orm
-    firewall_name: secured_area
-    user_class: SensioLabs\JobBoardBundle\Entity\User
+    administrators: %sensiolabs_jobboard.administrators%
 
 snc_redis:
     clients:
@@ -109,3 +107,8 @@ eko_feed:
             author:      'SensioLabs'
             
 liip_functional_test: ~
+
+sensio_labs_connect:
+    app_id:     e80d8af8cbcdeaa454e9ab522addbef5b9136107979f353e8107d40bff261b02
+    app_secret: 4e578644fab0f8854595e607fc10df50b1e591d7c0ea6c845e8c61df60ae5c92
+    scope:      SCOPE_EMAIL SCOPE_PUBLIC

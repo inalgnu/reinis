@@ -1,0 +1,19 @@
+$(function() {
+{% if user %}
+    SLNBar.isAuthenticated = true;
+    SLNBar.uuid = '{{ user.uuid }}';
+    SLNBar.fullName = '{{ user.name }}';
+    SLNBar.actions = {
+    '0': { 'url': SLNBar.urlConnectHomepage, 'label': 'Edit my profile on Connect' },
+    };
+    SLNBar.separatedActions = {
+    '0': { 'url': '{{ path('oauth_logout') }}', 'label' : "Logout" }
+    };
+{% else %}
+    SLNBar.isAuthenticated = false;
+    SLNBar.urlConnectButton = '{{ path('sensiolabs_connect_new_session') }}';
+{% endif %}
+
+$('#sln').html(SLNBar.render());
+SLNBar.bindEvents();
+});

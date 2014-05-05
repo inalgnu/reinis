@@ -17,6 +17,11 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('administrators')
+                    ->info('Array of administrator\'s uuids')
+                    ->defaultValue(array())
+                    ->prototype('scalar')->end()
+                ->end()
                 ->ArrayNode('max_per_page')
                     ->children()
                         ->integerNode('homepage')

@@ -2,8 +2,8 @@
 
 namespace SensioLabs\JobBoardBundle\Repository;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\EntityRepository;
-use FOS\UserBundle\Model\UserInterface;
 use SensioLabs\JobBoardBundle\Entity\Job;
 
 /**
