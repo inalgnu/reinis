@@ -60,7 +60,7 @@ class JobController extends Controller
     public function previewAction(Request $request, Job $job)
     {
         $jobManager = $this->container->get('sensiolabs.manager.job');
-        $jobManager->setJobIdInSession($request->getSession(), $job->getId());
+        $jobManager->setJobIdInSession($job->getId());
 
         return array('job' => $job);
     }
@@ -73,7 +73,7 @@ class JobController extends Controller
     {
         $jobManager = $this->container->get('sensiolabs.manager.job');
 
-        if (!$job = $jobManager->getJobFromSession($request->getSession())) {
+        if (!$job = $jobManager->getJobFromSession()) {
             $job = new Job();
         }
 
@@ -112,6 +112,9 @@ class JobController extends Controller
         }
 
         $form = $this->createForm('job', $job);
+
+        $jobManager = $this->container->get('sensiolabs.manager.job');
+        $jobManager->setJobIdInSession($job->getId());
 
         return array('form' =>  $form->createView());
     }
@@ -194,11 +197,11 @@ class JobController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @Method("GET")
      */
-    public function publishAction(Request $request, Job $job)
+    public function publishAction(Job $job)
     {
         $jobManager = $this->container->get('sensiolabs.manager.job');
 
-        if (null === $job->getUser() && $job === $jobManager->getJobFromSession($request->getSession())) {
+        if (null === $job->getUser() && $job === $jobManager->getJobFromSession()) {
             $jobManager->updateJob($job);
         }
 
@@ -207,7 +210,7 @@ class JobController extends Controller
         }
 
         $jobManager->publish($job);
-        $jobManager->removeJobIdFromSession($request->getSession());
+        $jobManager->removeJobIdFromSession();
 
         return new RedirectResponse($this->generateUrl('manage'));
     }
@@ -233,7 +236,7 @@ class JobController extends Controller
      * Generate the article feed
      *
      * @Route("/rss", name="job_feed")
-     * @return Response XML Feed
+     * @Method("GET")
      */
     public function feedAction(Request $request)
     {

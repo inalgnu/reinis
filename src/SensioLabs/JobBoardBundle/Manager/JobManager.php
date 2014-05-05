@@ -20,53 +20,48 @@ class JobManager implements JobManagerInterface
 
     private $adminEmail;
 
-    public function __construct(EntityManager $entityManager, SecurityContext $securityContext, Mailer $mailer, $adminEmail)
+    private $session;
+
+    public function __construct(EntityManager $entityManager, SecurityContext $securityContext, Mailer $mailer, SessionInterface $session, $adminEmail)
     {
         $this->entityManager = $entityManager;
         $this->securityContext = $securityContext;
         $this->mailer = $mailer;
         $this->adminEmail = $adminEmail;
+        $this->session = $session;
     }
 
     /**
-     * @param  SessionInterface      $session
-     * @return bool|Job
-     * @throws NotFoundHttpException
+     * @return mixed
      */
-    public function getJobFromSession(SessionInterface $session)
+    public function getJobFromSession()
     {
-        if ($id = $session->get('jobId')) {
-            $job = $this->entityManager->getRepository('SensioLabsJobBoardBundle:Job')->findOneById($id);
+        $id = $this->session->get('jobId');
 
-            if (!$job) {
-                if ($session->has('jobId')) {
-                    $session->remove('jobId');
-                }
+        $job = $this->entityManager->getRepository('SensioLabsJobBoardBundle:Job')->findOneById($id);
 
-                throw new NotFoundHttpException(sprintf('Unable to find job with id %s', $id));
-            }
-
-            return $job;
+        if (!$job) {
+            $this->removeJobIdFromSession();
         }
 
-        return false;
+        return $job;
     }
 
     /**
-     * @param SessionInterface $session
      * @param $id
+     * @return void
      */
-    public function setJobIdInSession(SessionInterface $session, $id)
+    public function setJobIdInSession($id)
     {
-        $session->set('jobId', $id);
+        $this->session->set('jobId', $id);
     }
 
     /**
-     * @param SessionInterface $session
+     * @return void
      */
-    public function removeJobIdFromSession(SessionInterface $session)
+    public function removeJobIdFromSession()
     {
-        $session->remove('jobId');
+        $this->session->remove('jobId');
     }
 
     /**
