@@ -42,6 +42,7 @@ class ElasticSearchTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/?q=microsoft');
         $this->assertCount(5, $crawler->filter('.box'));
+        $this->assertRegExp('/United Kingdom \(5\)/', $crawler->filter('.filter')->text());
 
         $crawler = $this->client->request('GET', '/?q=london+microsoft');
         $this->assertCount(10, $crawler->filter('.box'));

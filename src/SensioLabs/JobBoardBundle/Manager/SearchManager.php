@@ -19,8 +19,11 @@ class SearchManager
 
     public function getJobs($page, $maxResults, $country, $contractType, $searchText = null)
     {
+        $query = new \Elastica\Query();
+
         if (empty($searchText)) {
             $queryPart = new \Elastica\Query\MatchAll();
+            $query->setSort(array('created_at' => array('order' => 'desc')));
         } else {
             $queryPart = new \Elastica\Query\Bool();
             $matchTitle = new \Elastica\Query\Match();
@@ -49,7 +52,6 @@ class SearchManager
             $filters->addMust(new \Elastica\Filter\Query($match->setFieldQuery('contractType', $contractType)));
         }
 
-        $query = new \Elastica\Query();
         $query->setQuery(new \Elastica\Query\Filtered($queryPart, $filters));
 
         $countryFacet = new \Elastica\Facet\Terms('country');
