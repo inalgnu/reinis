@@ -3,12 +3,12 @@
 namespace SensioLabs\JobBoardBundle\Manager;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\User\UserInterface;
 use SensioLabs\JobBoardBundle\Entity\Job;
 use SensioLabs\JobBoardBundle\Service\Mailer;
+use Finite\Factory\FactoryInterface;
 
 class JobManager implements JobManagerInterface
 {
@@ -18,55 +18,53 @@ class JobManager implements JobManagerInterface
 
     private $mailer;
 
+    private $session;
+
+    private $finiteFactory;
+
     private $adminEmail;
 
-    public function __construct(EntityManager $entityManager, SecurityContext $securityContext, Mailer $mailer, $adminEmail)
+    public function __construct(EntityManager $entityManager, SecurityContext $securityContext, Mailer $mailer, SessionInterface $session, FactoryInterface $finiteFactory, $adminEmail)
     {
         $this->entityManager = $entityManager;
         $this->securityContext = $securityContext;
         $this->mailer = $mailer;
+        $this->session = $session;
+        $this->finiteFactory = $finiteFactory;
         $this->adminEmail = $adminEmail;
     }
 
     /**
-     * @param  SessionInterface      $session
-     * @return bool|Job
-     * @throws NotFoundHttpException
+     * @return mixed
      */
-    public function getJobFromSession(SessionInterface $session)
+    public function getJobFromSession()
     {
-        if ($id = $session->get('jobId')) {
-            $job = $this->entityManager->getRepository('SensioLabsJobBoardBundle:Job')->findOneById($id);
+        $id = $this->session->get('jobId');
 
-            if (!$job) {
-                if ($session->has('jobId')) {
-                    $session->remove('jobId');
-                }
+        $job = $this->entityManager->getRepository('SensioLabsJobBoardBundle:Job')->findOneById($id);
 
-                throw new NotFoundHttpException(sprintf('Unable to find job with id %s', $id));
-            }
-
-            return $job;
+        if (!$job) {
+            $this->removeJobIdFromSession();
         }
 
-        return false;
+        return $job;
     }
 
     /**
-     * @param SessionInterface $session
      * @param $id
+     * @return void
      */
-    public function setJobIdInSession(SessionInterface $session, $id)
+    public function setJobIdInSession($id)
     {
-        $session->set('jobId', $id);
+        $this->session->set('jobId', $id);
     }
 
     /**
-     * @param SessionInterface $session
+     * @return void
      */
-    public function removeJobIdFromSession(SessionInterface $session)
+    public function removeJobIdFromSession()
     {
-        $session->remove('jobId');
+        $this->session->remove('jobId');
     }
 
     /**
@@ -122,22 +120,59 @@ class JobManager implements JobManagerInterface
         );
     }
 
+    /**
+     * @param Job $job
+     * @return bool
+     */
     public function safeDelete(Job $job)
     {
-        $job->setStatus(Job::STATUS_DELETED);
+        $stateMachine = $this->finiteFactory->get($job);
+
+        if (!$stateMachine->can('delete')) {
+            return false;
+        }
+
+        $stateMachine->apply('delete');
+
         $job->setDeletedAt(new \DateTime());
         $this->entityManager->flush();
+
+        return true;
     }
 
+    /**
+     * @param Job $job
+     * @return bool
+     */
     public function restore(Job $job)
     {
-        $job->setStatus(Job::STATUS_RESTORED);
+        $stateMachine = $this->finiteFactory->get($job);
+
+        if (!$stateMachine->can('restore')) {
+            return false;
+        }
+
+        $stateMachine->apply('restore');
         $this->entityManager->flush();
+
+        return true;
     }
 
+    /**
+     * @param Job $job
+     * @return bool
+     */
     public function publish(Job $job)
     {
-        $job->setStatus(Job::STATUS_PUBLISHED);
+        $stateMachine = $this->finiteFactory->get($job);
+
+        if (!$stateMachine->can('publish')) {
+            return false;
+        }
+
+        $stateMachine->apply('publish');
         $this->entityManager->flush();
+
+        return true;
     }
 }

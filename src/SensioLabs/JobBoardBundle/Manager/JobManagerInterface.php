@@ -8,23 +8,20 @@ use SensioLabs\JobBoardBundle\Entity\Job;
 interface JobManagerInterface
 {
     /**
-     * @param  SessionInterface $session
      * @return mixed
      */
-    public function getJobFromSession(SessionInterface $session);
+    public function getJobFromSession();
 
     /**
-     * @param  SessionInterface $session
      * @param $id
      * @return void
      */
-    public function setJobIdInSession(SessionInterface $session, $id);
+    public function setJobIdInSession($id);
 
     /**
-     * @param  SessionInterface $session
-     * @return Job              or bool
+     * @return void
      */
-    public function removeJobIdFromSession(SessionInterface $session);
+    public function removeJobIdFromSession();
 
     /**
      * @param  Job  $job
@@ -46,19 +43,19 @@ interface JobManagerInterface
 
     /**
      * @param  Job  $job
-     * @return void
+     * @return bool
      */
     public function safeDelete(Job $job);
 
     /**
      * @param  Job  $job
-     * @return void
+     * @return bool
      */
     public function restore(Job $job);
 
     /**
      * @param  Job  $job
-     * @return void
+     * @return bool
      */
     public function publish(Job $job);
 }

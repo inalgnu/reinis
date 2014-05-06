@@ -21,13 +21,18 @@ php app/console assets:install --symlink
 php app/console assetic:dump
 ```
 
-##### 5. Setup and launch tests
+##### 5. Populate data in ElasticSearch
+```
+php app/console fos:elastica:populate
+```
 
-###### With phpunit and CapserJS:
+##### 6. Setup and launch tests
+
+###### With phpunit and CasperJS:
 
 ```
 php app/console doctrine:database:create --env=test
 php app/console doctrine:schema:update --env=test
 
-. tests.sh http://yourapp.dev/app_test.php
+. tests.sh http://path_to_your_website/app_test.php
 ```

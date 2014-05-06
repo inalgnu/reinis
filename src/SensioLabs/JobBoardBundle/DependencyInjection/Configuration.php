@@ -18,7 +18,24 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('administrators')
-                    ->info('Array of administrator\'s uuids')
+                    ->info('Set administrator\'s uuids')
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(function ($value) {
+                            return array($value);
+                        })
+                    ->end()
+                    ->defaultValue(array())
+                    ->prototype('scalar')->end()
+                ->end()
+                ->arrayNode('api_host_granted')
+                    ->info('Set granted hosts')
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(function ($value) {
+                            return array($value);
+                        })
+                    ->end()
                     ->defaultValue(array())
                     ->prototype('scalar')->end()
                 ->end()
@@ -38,8 +55,8 @@ class Configuration implements ConfigurationInterface
                     ->info('The email address of the administrator')
                     ->isRequired()
                     ->validate()
-                    ->ifTrue(function ($s) {
-                        return preg_match('#^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$#', $s) !== 1;
+                    ->ifTrue(function ($value) {
+                        return !filter_var($value, FILTER_VALIDATE_EMAIL);
                     })
                     ->thenInvalid('Invalid email')
                 ->end()

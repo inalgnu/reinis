@@ -15,12 +15,25 @@
     {% embed 'SensioLabsJobBoardBundle:Includes:job.html.twig' %}
         {% block job_steps %}
             <div class="padding clearfix">
-                <a href="{{ path('job_post') }}" class="green-button left"><span class="sprite-icon-light-arrow-left"></span>
-                    <span>{{ 'job.make_changes'|trans }}</span>
-                </a>
-                <a href="{{ path('job_publish', {'id': job.id}) }}" class="green-button right"><img src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" class="sprite-icon-cloud-upload" />
-                    <span>{{ 'job.publish'|trans }}</span>
-                </a>
+                {% if is_granted('ROLE_USER') %}
+                    <a href="{{ path('job_update', {'country_code': job.country, 'contract_type': job.contractType, 'slug': job.slug}) }}" class="green-button left">
+                    <span class="sprite-icon-light-arrow-left"></span>
+                        <span>{{ 'job.make_changes'|trans }}</span>
+                    </a>
+                {% else %}
+                    <a href="{{ path('job_post') }}" class="green-button left"><span class="sprite-icon-light-arrow-left"></span>
+                        <span>{{ 'job.make_changes'|trans }}</span>
+                    </a>
+                {% endif %}
+                {% if job.isPublished %}
+                    <a href="{{ path('manage') }}" class="green-button right"><span class="sprite-icon-light-arrow-right"></span>
+                        <span>{{ 'job.back'|trans }}</span>
+                    </a>
+                {% else %}
+                    <a href="{{ path('job_publish', {'id': job.id}) }}" class="green-button right"><img src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" class="sprite-icon-cloud-upload" />
+                        <span>{{ 'job.publish'|trans }}</span>
+                    </a>
+                {% endif %}
             </div>
         {% endblock %}
     {% endembed %}

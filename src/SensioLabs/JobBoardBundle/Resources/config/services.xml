@@ -22,6 +22,8 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="security.context" />
             <argument type="service" id="sensiolabs.service.mailer" />
+            <argument type="service" id="session" />
+            <argument type="service" id="finite.factory" />
             <argument>%sensio_labs_job_board.admin_email%</argument>
         </service>
         <service id="sensiolabs.manager.search" class="SensioLabs\JobBoardBundle\Manager\SearchManager">
@@ -31,7 +33,7 @@
         <service id="security.access.whitelist_voter" class="SensioLabs\JobBoardBundle\Security\Authorization\Voter\ApiHostVoter" public="false">
             <argument type="service" id="request_stack" strict="false" />
             <argument>%kernel.environment%</argument>
-            <argument>%api_host_granted%</argument>
+            <argument>%sensio_labs_job_board.api_host_granted%</argument>
             <tag name="security.voter" />
         </service>
         <service id="sensiolabs.service.view_counter" class="SensioLabs\JobBoardBundle\Service\ViewCounter">

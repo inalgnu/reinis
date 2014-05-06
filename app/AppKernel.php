@@ -33,6 +33,7 @@ class AppKernel extends Kernel
             new SensioLabs\Bundle\ConnectBundle\SensioLabsConnectBundle(),
             new FOS\ElasticaBundle\FOSElasticaBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new Finite\Bundle\FiniteBundle\FiniteFiniteBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

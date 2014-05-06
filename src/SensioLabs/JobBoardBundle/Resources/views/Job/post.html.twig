@@ -72,6 +72,8 @@
                     <span>
                         {% if form.vars.value.isNew %}
                             {{ 'job.update'|trans }}
+                        {% elseif is_granted('ROLE_USER') and  form.vars.value.isPublished %}
+                            {{ 'job.save'|trans }}
                         {% else %}
                             {{ 'job.preview'|trans }}
                         {% endif %}
