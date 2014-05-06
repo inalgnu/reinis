@@ -50,9 +50,9 @@ class JobAdminController extends Controller
             throw new AccessDeniedException();
         }
 
-        if (!$object->isPublished()) {
-            $jobManager = $this->container->get('sensiolabs.manager.job');
-            $jobManager->safeDelete($object);
+        $jobManager = $this->container->get('sensiolabs.manager.job');
+
+        if ($jobManager->safeDelete($object)) {
             $this->addFlash('sonata_flash_success', sprintf('Job %s has been successfully deleted.', $object->getTitle()));
         } else {
             $this->addFlash('sonata_flash_error', sprintf('You cannot delete %s, it must not be published.', $object->getTitle()));
@@ -74,9 +74,9 @@ class JobAdminController extends Controller
             throw new AccessDeniedException();
         }
 
-        if ($object->isDeleted()) {
-            $jobManager = $this->container->get('sensiolabs.manager.job');
-            $jobManager->restore($object);
+        $jobManager = $this->container->get('sensiolabs.manager.job');
+
+        if ($jobManager->restore($object)) {
             $this->addFlash('sonata_flash_success', sprintf('Job %s has been successfully restored.', $object->getTitle()));
         } else {
             $this->addFlash('sonata_flash_error', sprintf('You cannot restore %s, it must be deleted first.', $object->getTitle()));

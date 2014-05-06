@@ -23,6 +23,7 @@
             <argument type="service" id="security.context" />
             <argument type="service" id="sensiolabs.service.mailer" />
             <argument type="service" id="session" />
+            <argument type="service" id="finite.factory" />
             <argument>%sensio_labs_job_board.admin_email%</argument>
         </service>
         <service id="sensiolabs.manager.search" class="SensioLabs\JobBoardBundle\Manager\SearchManager">

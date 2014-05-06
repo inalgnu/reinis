@@ -42,3 +42,8 @@ job:
     delete: Delete
     no_jobs: You have no jobs.
     not_online_yet: Not online yet
+    flash:
+        successfully_published: Job %title% has been successfully published.
+        successfully_deleted: Job %title% has been successfully published.
+        cannot_publish: You cannot publish %title%.
+        cannot_delete: You cannot delete %title%.

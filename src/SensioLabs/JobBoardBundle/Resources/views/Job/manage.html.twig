@@ -9,6 +9,9 @@
 {% import "SensioLabsJobBoardBundle:Includes:pagination.html.twig" as pagination %}
 
 {% block content %}
+
+    {% include 'SensioLabsJobBoardBundle:Includes:flash_message.html.twig' %}
+
     {{ breadcrumb({
         ('My Jobs'): path('manage'),
     }) }}

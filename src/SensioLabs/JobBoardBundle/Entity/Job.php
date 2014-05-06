@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Eko\FeedBundle\Item\Writer\ItemInterface;
+use Finite\StatefulInterface;
 
 /**
  * Job
@@ -16,7 +17,7 @@ use Eko\FeedBundle\Item\Writer\ItemInterface;
  * @ORM\Table(name="sl_job")
  * @ORM\Entity(repositoryClass="SensioLabs\JobBoardBundle\Repository\JobRepository")
  */
-class Job implements ItemInterface
+class Job implements ItemInterface, StatefulInterface
 {
     const FULL_TIME = 'Full Time';
     const PART_TIME = 'Part Time';
@@ -24,13 +25,13 @@ class Job implements ItemInterface
     const FREELANCE = 'Freelance';
     const ALTERNANCE = 'Alternance';
 
-    const STATUS_NEW = 'New';
-    const STATUS_ORDERED = 'Ordered';
-    const STATUS_PUBLISHED = 'Published';
-    const STATUS_EXPIRED = 'Expired';
-    const STATUS_ARCHIVED = 'Archived';
-    const STATUS_DELETED = 'Deleted';
-    const STATUS_RESTORED = 'Restored';
+    const STATUS_NEW = 'new';
+    const STATUS_ORDERED = 'ordered';
+    const STATUS_PUBLISHED = 'published';
+    const STATUS_EXPIRED = 'expired';
+    const STATUS_ARCHIVED = 'archived';
+    const STATUS_DELETED = 'deleted';
+    const STATUS_RESTORED = 'restored';
 
     /**
      * @var integer
@@ -571,5 +572,15 @@ class Job implements ItemInterface
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    public function setFiniteState($status)
+    {
+        $this->setStatus($status);
+    }
+
+    public function getFiniteState()
+    {
+        return $this->getStatus();
     }
 }

@@ -139,3 +139,42 @@ fos_elastica:
                         finder: ~
                         elastica_to_model_transformer:
                             service: sensiolabs.elastica.job_transformer
+
+finite_finite:
+    jobworkflow:
+        class: SensioLabs\JobBoardBundle\Entity\Job
+        property_path: status
+        states:
+            new:
+                type: initial
+            ordered:
+                type: normal
+            published:
+                type: normal
+            expired:
+                type: normal
+            archived:
+                type: normal
+            deleted:
+                type: normal
+            restored:
+                type: final
+        transitions:
+            order:
+                from: [new]
+                to: ordered
+            publish:
+                from: [new]
+                to: published
+            expire:
+                from: [published]
+                to: expired
+            archive:
+                from: [expired]
+                to: archived
+            delete:
+                from: [new, expired, archived, restored]
+                to: deleted
+            restore:
+                from: [deleted]
+                to: restored

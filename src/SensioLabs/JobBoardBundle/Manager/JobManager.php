@@ -3,12 +3,12 @@
 namespace SensioLabs\JobBoardBundle\Manager;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\User\UserInterface;
 use SensioLabs\JobBoardBundle\Entity\Job;
 use SensioLabs\JobBoardBundle\Service\Mailer;
+use Finite\Factory\FactoryInterface;
 
 class JobManager implements JobManagerInterface
 {
@@ -18,17 +18,20 @@ class JobManager implements JobManagerInterface
 
     private $mailer;
 
-    private $adminEmail;
-
     private $session;
 
-    public function __construct(EntityManager $entityManager, SecurityContext $securityContext, Mailer $mailer, SessionInterface $session, $adminEmail)
+    private $finiteFactory;
+
+    private $adminEmail;
+
+    public function __construct(EntityManager $entityManager, SecurityContext $securityContext, Mailer $mailer, SessionInterface $session, FactoryInterface $finiteFactory, $adminEmail)
     {
         $this->entityManager = $entityManager;
         $this->securityContext = $securityContext;
         $this->mailer = $mailer;
-        $this->adminEmail = $adminEmail;
         $this->session = $session;
+        $this->finiteFactory = $finiteFactory;
+        $this->adminEmail = $adminEmail;
     }
 
     /**
@@ -117,22 +120,59 @@ class JobManager implements JobManagerInterface
         );
     }
 
+    /**
+     * @param Job $job
+     * @return bool
+     */
     public function safeDelete(Job $job)
     {
-        $job->setStatus(Job::STATUS_DELETED);
+        $stateMachine = $this->finiteFactory->get($job);
+
+        if (!$stateMachine->can('delete')) {
+            return false;
+        }
+
+        $stateMachine->apply('delete');
+
         $job->setDeletedAt(new \DateTime());
         $this->entityManager->flush();
+
+        return true;
     }
 
+    /**
+     * @param Job $job
+     * @return bool
+     */
     public function restore(Job $job)
     {
-        $job->setStatus(Job::STATUS_RESTORED);
+        $stateMachine = $this->finiteFactory->get($job);
+
+        if (!$stateMachine->can('restore')) {
+            return false;
+        }
+
+        $stateMachine->apply('restore');
         $this->entityManager->flush();
+
+        return true;
     }
 
+    /**
+     * @param Job $job
+     * @return bool
+     */
     public function publish(Job $job)
     {
-        $job->setStatus(Job::STATUS_PUBLISHED);
+        $stateMachine = $this->finiteFactory->get($job);
+
+        if (!$stateMachine->can('publish')) {
+            return false;
+        }
+
+        $stateMachine->apply('publish');
         $this->entityManager->flush();
+
+        return true;
     }
 }

@@ -1,0 +1,7 @@
+{% for type, messages in app.session.flashbag.all() %}
+    {% for message in messages %}
+        <div class="alert alert-{% if type == 'job_flash_error' %}error{% else %}success{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}

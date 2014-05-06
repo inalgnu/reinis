@@ -43,19 +43,19 @@ interface JobManagerInterface
 
     /**
      * @param  Job  $job
-     * @return void
+     * @return bool
      */
     public function safeDelete(Job $job);
 
     /**
      * @param  Job  $job
-     * @return void
+     * @return bool
      */
     public function restore(Job $job);
 
     /**
      * @param  Job  $job
-     * @return void
+     * @return bool
      */
     public function publish(Job $job);
 }

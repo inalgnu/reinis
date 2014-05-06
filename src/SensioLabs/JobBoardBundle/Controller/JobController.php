@@ -57,10 +57,15 @@ class JobController extends Controller
      * @Route("/{country_code}/{contract_type}/{slug}/preview", name="job_preview")
      * @Template()
      */
-    public function previewAction(Request $request, Job $job)
+    public function previewAction(Job $job)
     {
         $jobManager = $this->container->get('sensiolabs.manager.job');
-        $jobManager->setJobIdInSession($job->getId());
+
+        if (null !== $this->getUser()) {
+            $jobManager->removeJobIdFromSession();
+        } else {
+            $jobManager->setJobIdInSession($job->getId());
+        }
 
         return array('job' => $job);
     }
@@ -209,7 +214,12 @@ class JobController extends Controller
             throw new AccessDeniedException();
         }
 
-        $jobManager->publish($job);
+        if ($jobManager->publish($job)) {
+            $this->addFlash('job_flash_success', 'job.flash.successfully_published', $job->getTitle());
+        } else {
+            $this->addFlash('job_flash_error', 'job.flash.cannot_publish', $job->getTitle());
+        }
+
         $jobManager->removeJobIdFromSession();
 
         return new RedirectResponse($this->generateUrl('manage'));
@@ -227,7 +237,12 @@ class JobController extends Controller
         }
 
         $jobManager = $this->container->get('sensiolabs.manager.job');
-        $jobManager->safeDelete($job);
+
+        if ($jobManager->safeDelete($job)) {
+            $this->addFlash('job_flash_success', 'job.flash.successfully_deleted', $job->getTitle());
+        } else {
+            $this->addFlash('job_flash_error', 'job.flash.cannot_delete', $job->getTitle());
+        }
 
         return new RedirectResponse($this->generateUrl('manage'));
     }
@@ -254,5 +269,12 @@ class JobController extends Controller
         $feed->addItemField(new ItemField('howToApply', 'getHowToApply'));
 
         return new Response($feed->render('rss'));
+    }
+
+    private function addFlash($type, $translationKey, $title)
+    {
+        $this->get('session')
+            ->getFlashBag()
+            ->add($type, $this->get('translator')->trans($translationKey, array('%title%' => $title)));
     }
 }
