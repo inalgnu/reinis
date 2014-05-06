@@ -16,15 +16,15 @@
     {% embed 'SensioLabsJobBoardBundle:Includes:box.html.twig' %}
         {% block box_content %}
             <div class="padding-table">
-                <h2 class="big-title">My jobs</h2>
-                <a href="{{ path('job_post') }}" class="add right"><img class="sprite-button-add-focus-grey-bg" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="+" /> Post a job </a>
+                <h2 class="big-title">{{ 'header.my_job'|trans }} </h2>
+                <a href="{{ path('job_post') }}" class="add right"><img class="sprite-button-add-focus-grey-bg" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="+" />  {{ 'header.post_job'|trans }} </a>
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th class="span5"> Title </th>
-                        <th class="span2"> Time left </th>
-                        <th class="span2"> Displays </th>
-                        <th class="span4"> Actions </th>
+                        <th class="span5"> {{ 'job.titre'|trans }} </th>
+                        <th class="span2"> {{ 'job.time_left'|trans }} </th>
+                        <th class="span2"> {{ 'job.displays'|trans }} </th>
+                        <th class="span4"> {{ 'job.actions'|trans }} </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -37,21 +37,21 @@
                                     </a>
                                 </td>
 
-                                <td style="color:orange"> {% if job.getTimeLeft %}{{ job.getTimeLeft }}{% else %}Not online yet{% endif %}</td>
+                                <td style="color:orange">{% if job.getTimeLeft %}{{ job.getTimeLeft }}{% else %}{{ 'job.not_online_yet'|trans }}{% endif %}</td>
 
                                 <td> {{ getTotalViewCount('job', job.id) }} </td>
 
                                 <td class="action">
-                                    <a href="{{ path('job_publish', {'id': job.id}) }}"> Publish </a> /
+                                    <a href="{{ path('job_publish', {'id': job.id}) }}"> {{ 'job.publish'|trans }} </a> /
 
-                                    <a href="{{ path('job_update', {'country_code': job.country, 'contract_type': job.contractType, 'slug': job.slug}) }}"> Make changes </a> /
+                                    <a href="{{ path('job_update', {'country_code': job.country, 'contract_type': job.contractType, 'slug': job.slug}) }}"> {{ 'job.make_changes'|trans }} </a> /
 
-                                    <a href="{{ path('job_delete', {'id': job.id}) }}"> Delete </a>
+                                    <a href="{{ path('job_delete', {'id': job.id}) }}"> {{ 'job.delete'|trans }} </a>
                                 </td>
                             </tr>
                         {% endfor %}
                     {% else %}
-                        <tr><td colspan="5"> You have no jobs. </td></tr>
+                        <tr><td colspan="5"> {{ 'job.no_jobs'|trans }} </td></tr>
                     {% endif %}
                     </tbody>
                 </table>

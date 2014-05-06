@@ -25,9 +25,20 @@ job:
     preview: Aperçu
     publish: Publier
     make_changes: Modifier
+    back: Retour
+    save: Sauvegarder
     label:
         title: Titre de l'annonce
         company: Société
         contract_type: Type de contrat
         city: Ville
         how_to_apply: Envoyer votre CV et une lettre de motivation à ...
+    titre: Titre
+    time_left: Temps restant
+    displays: Vues
+    actions: Actions
+    publish: Publier
+    make_changes: Modifier
+    delete: Effacer
+    no_jobs: Vous n'avez aucune annonces.
+    not_online_yet: Pas encore en ligne

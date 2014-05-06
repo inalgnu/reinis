@@ -25,9 +25,20 @@ job:
     preview: Preview
     publish: Publish
     make_changes: Make changes
+    back: Back
+    save: Save
     label:
         title: Job Tile
         company: Company
         contract_type: Type of contract
         city: City
         how_to_apply: Send your resume at ...
+    titre: Title
+    time_left: Time left
+    displays: Displays
+    actions: Actions
+    publish: Publish
+    make_changes: Make changes
+    delete: Delete
+    no_jobs: You have no jobs.
+    not_online_yet: Not online yet
