@@ -24,6 +24,10 @@
             <argument type="service" id="sensiolabs.service.mailer" />
             <argument>%sensio_labs_job_board.admin_email%</argument>
         </service>
+        <service id="sensiolabs.manager.search" class="SensioLabs\JobBoardBundle\Manager\SearchManager">
+            <argument type="service" id="fos_elastica.index.jobs" />
+            <argument type="service" id="fos_elastica.manager.orm" />
+        </service>
         <service id="security.access.whitelist_voter" class="SensioLabs\JobBoardBundle\Security\Authorization\Voter\ApiHostVoter" public="false">
             <argument type="service" id="request_stack" strict="false" />
             <argument>%kernel.environment%</argument>
@@ -52,6 +56,13 @@
             <argument>SensioLabsJobBoardBundle:User</argument>
             <call method="setAdminUuids">
                 <argument>%sensio_labs_job_board.administrators%</argument>
+            </call>
+        </service>
+        <service id="sensiolabs.elastica.job_transformer" class="SensioLabs\JobBoardBundle\DataTransformer\JobModelTransformer">
+            <argument type="service" id="doctrine" />
+            <argument type="string">SensioLabs\JobBoardBundle\Entity\Job</argument>
+            <call method="setPropertyAccessor">
+                <argument type="service" id="fos_elastica.property_accessor" />
             </call>
         </service>
     </services>

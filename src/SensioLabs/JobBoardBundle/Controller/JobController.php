@@ -28,13 +28,14 @@ class JobController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $searchManager = $this->container->get('sensiolabs.manager.search');
         $country = $request->query->get('country');
         $contractType = $request->query->get('contract-type');
         $page = $request->query->get('page', 1);
         $maxPerPage = $this->container->getParameter('sensio_labs_job_board.max_per_page.homepage');
 
-        $jobRepository = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Job');
-        $jobs = $jobRepository->getJobs($page, $country, $contractType, $maxPerPage);
+        $jobsData = $searchManager->getJobs($page, $maxPerPage, $country, $contractType, $request->query->get('q'));
+        $jobs = $jobsData['jobs'];
 
         $viewCounter = $this->container->get('sensiolabs.service.view_counter');
         foreach ($jobs as $job) {
@@ -47,8 +48,8 @@ class JobController extends Controller
 
         return array(
             'jobs' => $jobs,
-            'countries' => $jobRepository->getCountriesWithJob($contractType),
-            'contract_types' => $jobRepository->getContractTypesWithJob($country),
+            'countries' => $jobsData['country'],
+            'contract_types' => $jobsData['contractType'],
         );
     }
 

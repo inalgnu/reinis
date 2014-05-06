@@ -162,4 +162,17 @@ class JobRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function createSearchIndexQueryBuilder()
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->where('a.status = :status')
+            ->setParameter('status', Job::STATUS_PUBLISHED)
+            ->andWhere('a.visibleFrom <= :current_date')
+            ->andWhere('a.visibleTo >= :current_date')
+            ->setParameter('current_date', new \DateTime())
+        ;
+
+        return $qb;
+    }
 }

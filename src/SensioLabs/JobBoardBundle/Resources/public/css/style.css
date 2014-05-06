@@ -4342,7 +4342,7 @@ nav.menu a {
     margin-right: 38px;
 }
 .home #splash .section .description {
-    padding-top: 55px;
+    padding-top: 32px;
 }
 .sprite-button-add,
 .sprite-button-add-focus,
@@ -5323,4 +5323,25 @@ span.non_extensible_button_01 {
 
 .box .errors ul {
     margin-bottom: 0;
+}
+
+.search-jobs input {
+    border-radius: 2px 0 0 2px;
+    -webkit-border-radius: 2px 0 0 2px;
+    -moz-border-radius: 2px 0 0 2px;
+    border: 0;
+    padding: 13px 13px;
+    width: 460px;
+    font-size: 16px;
+    color: grey;
+}
+
+.search-jobs button {
+    background-color: #5ec619!important;
+    height: 44px !important;
+    margin-left: -5px;
+    border: 0 !important;
+    border-radius: 0 2px 2px 0;
+    background: none;
+    position: absolute;
 }

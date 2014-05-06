@@ -12,6 +12,7 @@ home:
     rss: RSS
     less: Less
     more: More
+    search: Job title, description, company, city...
 
 header:
     post_job: Post a job

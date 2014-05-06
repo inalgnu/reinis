@@ -9,6 +9,7 @@
                 <img src="{{ asset('bundles/sensiolabsjobboard/images/home/megaphone.png') }}" alt="Job !" class="megaphone" />
                 <p class="description">{{ 'home.description'|trans|raw }}</p>
             </article>
+            {% include 'SensioLabsJobBoardBundle:Includes:search.html.twig' %}
         </div>
     </div>
 {% endblock %}
@@ -28,12 +29,12 @@
                         {{ 'home.countries'|trans }}
                     </a>
                 </li>
-                {% for data in countries %}
+                {% for country, number in countries %}
                     <li {% if loop.index > 3 %}style="display:none"{% endif %}
-                        {% if data.country ==  app.request.query.get('country') %}class="active"{% endif %}>
+                        {% if country == app.request.query.get('country') %}class="active"{% endif %}>
 
-                        <a href="{{ path('homepage', (app.request.query.all)|merge({'country': data.country})) }}">
-                            {{ data.country|country }} ({{ data.number }})
+                        <a href="{{ path('homepage', (app.request.query.all)|merge({'country': country})) }}">
+                            {{ country|country }} ({{ number }})
                         </a>
                     {% if loop.index > 4 %}
                         <li>
@@ -51,12 +52,12 @@
                         {{ 'home.all_contract_type'|trans }}
                     </a>
                 </li>
-                {% for data in contract_types %}
+                {% for contractType, number in contract_types %}
                     <li {% if loop.index > 3 %}style="display:none"{% endif %}
-                        {% if data.contractType == app.request.query.get('contract-type') %}class="active"{% endif %}>
+                        {% if contractType == app.request.query.get('contract-type') %}class="active"{% endif %}>
 
-                        <a href="{{ path('homepage', (app.request.query.all)|merge({'contract-type': data.contractType})) }}">
-                            {{ data.contractType }} ({{ data.number }})
+                        <a href="{{ path('homepage', (app.request.query.all)|merge({'contract-type': contractType})) }}">
+                            {{ contractType }} ({{ number }})
                         </a>
                     </li>
 

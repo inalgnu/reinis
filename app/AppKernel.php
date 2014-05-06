@@ -31,6 +31,8 @@ class AppKernel extends Kernel
             new Eko\FeedBundle\EkoFeedBundle(),
             new Liip\FunctionalTestBundle\LiipFunctionalTestBundle(),
             new SensioLabs\Bundle\ConnectBundle\SensioLabsConnectBundle(),
+            new FOS\ElasticaBundle\FOSElasticaBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
