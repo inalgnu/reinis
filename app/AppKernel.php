@@ -34,6 +34,7 @@ class AppKernel extends Kernel
             new FOS\ElasticaBundle\FOSElasticaBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Finite\Bundle\FiniteBundle\FiniteFiniteBundle(),
+            new Knp\Bundle\TimeBundle\KnpTimeBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

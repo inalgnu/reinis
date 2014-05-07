@@ -25,8 +25,8 @@
                     <thead>
                     <tr>
                         <th class="span5"> {{ 'job.titre'|trans }} </th>
-                        <th class="span2"> {{ 'job.time_left'|trans }} </th>
-                        <th class="span2"> {{ 'job.displays'|trans }} </th>
+                        <th class="span3"> {{ 'job.time_left'|trans }} </th>
+                        <th class="span1"> {{ 'job.displays'|trans }} </th>
                         <th class="span4"> {{ 'job.actions'|trans }} </th>
                     </tr>
                     </thead>
@@ -40,7 +40,7 @@
                                     </a>
                                 </td>
 
-                                <td style="color:orange">{% if job.getTimeLeft %}{{ job.getTimeLeft }}{% else %}{{ 'job.not_online_yet'|trans }}{% endif %}</td>
+                                <td style="color:orange">{% if job.visibleTo %}{{ time_diff(job.visibleTo)|capitalize }}{% else %}{{ 'job.not_online_yet'|trans }}{% endif %}</td>
 
                                 <td> {{ getTotalViewCount('job', job.id) }} </td>
 

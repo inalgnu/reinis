@@ -34,7 +34,8 @@
         "sensiolabs/connect-bundle": "~2.0",
         "friendsofsymfony/elastica-bundle": "3.0.*",
         "jms/serializer-bundle": "0.12.0",
-        "yohang/finite": "1.1.*@dev"
+        "yohang/finite": "1.1.*@dev",
+        "knplabs/knp-time-bundle": "1.1.*@dev"
     },
     "scripts": {
         "post-install-cmd": [

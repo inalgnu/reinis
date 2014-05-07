@@ -459,26 +459,6 @@ class Job implements ItemInterface, StatefulInterface
         return $this->deletedAt;
     }
 
-    /**
-     * @return string|bool
-     */
-    public function getTimeLeft()
-    {
-        $currentDate = new \DateTime();
-
-        if (null !== $this->visibleTo) {
-            $interval = $currentDate->diff($this->visibleTo);
-
-            if ($interval->format('%a') == 0) {
-                return $interval->format('%h hour(s) left');
-            }
-
-            return $interval->format('%a day(s) left');
-        }
-
-        return false;
-    }
-
     public function getFeedItemTitle()
     {
         return $this->title;
