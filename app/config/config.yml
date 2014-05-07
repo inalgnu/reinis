@@ -123,13 +123,13 @@ fos_elastica:
             types:
                 Job:
                     mappings:
-                        title: { type: string }
-                        description: { type: string }
-                        country: { type: string, index: not_analyzed }
-                        city: { type: string }
+                        title:        { type: string, boost: 3}
+                        company:      { type: string , boost: 2}
+                        city:         { type: string , boost: 1}
+                        description:  { type: string }
+                        country:      { type: string, index: not_analyzed }
                         contractType: { type: string, index: not_analyzed }
-                        company: { type: string }
-                        created_at: { type: string, index: not_analyzed }
+                        created_at:   { type: string, index: not_analyzed }
                     persistence:
                         driver: orm
                         model: SensioLabs\JobBoardBundle\Entity\Job

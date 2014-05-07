@@ -27,18 +27,14 @@ class SearchManager
         } else {
             $queryPart = new \Elastica\Query\Bool();
             $matchTitle = new \Elastica\Query\Match();
-            $matchTitle->setFieldQuery('title', $searchText)->setFieldBoost('title', 3);
             $matchDescription = new \Elastica\Query\Match();
-            $matchDescription->setFieldQuery('description', $searchText);
             $matchCompany = new \Elastica\Query\Match();
-            $matchCompany->setFieldQuery('company', $searchText)->setFieldBoost('company', 2);
             $matchCity = new \Elastica\Query\Match();
-            $matchCity->setFieldQuery('city', $searchText)->setFieldBoost('city', 1);
 
-            $queryPart->addShould($matchTitle);
-            $queryPart->addShould($matchDescription);
-            $queryPart->addShould($matchCompany);
-            $queryPart->addShould($matchCity);
+            $queryPart->addShould($matchTitle->setFieldQuery('title', $searchText));
+            $queryPart->addShould($matchDescription->setFieldQuery('description', $searchText));
+            $queryPart->addShould($matchCompany->setFieldQuery('company', $searchText));
+            $queryPart->addShould($matchCity->setFieldQuery('city', $searchText));
         }
 
         $filters = new \Elastica\Filter\Bool();

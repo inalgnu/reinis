@@ -61,49 +61,6 @@ class JobRepository extends EntityRepository
         return $qb->getQuery();
     }
 
-    /**
-     * @return array
-     */
-    public function getCountriesWithJob($contractType = null)
-    {
-        $qb = $this->createQueryBuilder('a')
-            ->select('count(l) as number, l.country')
-            ->where('a.status = :status')
-            ->setParameter('status', Job::STATUS_PUBLISHED)
-            ->andWhere('a.visibleFrom <= :current_date')
-            ->andWhere('a.visibleTo >= :current_date')
-            ->setParameter('current_date', new \DateTime())
-        ;
-
-        $qb = $this->setFiltersQB($qb, null, $contractType);
-        $qb->innerJoin('a.location', 'l')
-            ->groupBy('l.country')
-        ;
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @return array
-     */
-    public function getContractTypesWithJob($country = null)
-    {
-        $qb = $this->createQueryBuilder('a')
-            ->select('count(a) as number, a.contractType')
-            ->where('a.status = :status')
-            ->setParameter('status', Job::STATUS_PUBLISHED)
-            ->andWhere('a.visibleFrom <= :current_date')
-            ->andWhere('a.visibleTo >= :current_date')
-            ->setParameter('current_date', new \DateTime())
-        ;
-
-        $qb = $this->setFiltersQB($qb, $country);
-        $qb->groupBy('a.contractType')
-        ;
-
-        return $qb->getQuery()->getResult();
-    }
-
     public function getRandomJob()
     {
         $em = $this->getEntityManager();
