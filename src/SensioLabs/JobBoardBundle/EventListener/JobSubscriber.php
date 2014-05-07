@@ -5,7 +5,6 @@ namespace SensioLabs\JobBoardBundle\EventListener;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use SensioLabs\JobBoardBundle\Entity\Job;
-use SensioLabs\JobBoardBundle\Entity\Location;
 
 class JobSubscriber implements EventSubscriber
 {
@@ -20,7 +19,6 @@ class JobSubscriber implements EventSubscriber
     {
         $entity = $args->getEntity();
         $em = $args->getEntityManager();
-        $uow = $em->getUnitOfWork();
 
         if ($entity instanceof Job) {
             $existingLocation = $em->getRepository('SensioLabsJobBoardBundle:Location')->findOneBy(array(

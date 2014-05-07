@@ -2,10 +2,8 @@
 
 namespace SensioLabs\JobBoardBundle\Entity;
 
-use SensioLabs\JobBoardBundle\Entity\Job;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Job

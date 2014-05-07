@@ -2,7 +2,6 @@
 
 namespace SensioLabs\JobBoardBundle\Manager;
 
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use SensioLabs\JobBoardBundle\Entity\Job;
 
 interface JobManagerInterface

@@ -50,7 +50,7 @@
         <service id="sensiolabs.event_listener.job" class="SensioLabs\JobBoardBundle\EventListener\JobSubscriber">
             <tag name="doctrine.event_listener" event="prePersist" />
         </service>
-        <service id="sensiolabs.event_listener.interactive_login" class="Sensiolabs\JobBoardBundle\EventListener\SecurityInteractiveLoginListener">
+        <service id="sensiolabs.event_listener.interactive_login" class="SensioLabs\JobBoardBundle\EventListener\SecurityInteractiveLoginListener">
             <tag name="kernel.event_subscriber" />
             <argument type="service" id="doctrine.orm.entity_manager" />
         </service>

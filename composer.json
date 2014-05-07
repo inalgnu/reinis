@@ -1,5 +1,5 @@
 {
-    "name": "SensioLabs/JobBoard",
+    "name": "sensio-labs/job-board",
     "description": "The official job board for Symfony talent.",
     "license": "proprietary",
     "autoload": {
