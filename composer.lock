@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "2dafd79a0167157abd2d309b34cb5086",
+    "hash": "c84263918cce4fd9738a80e667bd7d55",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -3561,12 +3561,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yohang/Finite.git",
-                "reference": "15b50f5d79463219f582ed7400c117c4954d410d"
+                "reference": "68890e6c56121bfeee554179be476466c4cb034c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yohang/Finite/zipball/15b50f5d79463219f582ed7400c117c4954d410d",
-                "reference": "15b50f5d79463219f582ed7400c117c4954d410d",
+                "url": "https://api.github.com/repos/yohang/Finite/zipball/68890e6c56121bfeee554179be476466c4cb034c",
+                "reference": "68890e6c56121bfeee554179be476466c4cb034c",
                 "shasum": ""
             },
             "require": {
@@ -3623,7 +3623,7 @@
                 "transition",
                 "workflow"
             ],
-            "time": "2014-05-05 08:12:02"
+            "time": "2014-05-06 12:00:46"
         },
         {
             "name": "zendframework/zend-escaper",

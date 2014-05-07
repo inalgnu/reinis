@@ -1,7 +1,4 @@
 security:
-    encoders:
-        Sensiolabs\JobBoardBundle\Entity\User: plaintext
-
     providers:
         sensiolabs_connect:
             id: sensiolabs.user_repository

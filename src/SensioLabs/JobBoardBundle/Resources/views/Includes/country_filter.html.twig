@@ -1,0 +1,23 @@
+<div class="filter">
+    <span class="title"><img class="sprite-icon-location" alt=">" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}"/>{{ 'home.location'|trans }}</span>
+    <ul>
+        <li {% if not app.request.query.has('country') %}class="active"{% endif %}>
+            <a href="{{ path('homepage', (app.request.query.all)|merge({'country': null})) }}">
+                {{ 'home.countries'|trans }}
+            </a>
+        </li>
+        {% for country, number in countries %}
+        <li {% if loop.index > 3 %}style="display:none"{% endif %}
+                {% if country == app.request.query.get('country') %}class="active"{% endif %}>
+
+            <a href="{{ path('homepage', (app.request.query.all)|merge({'country': country})) }}">
+                {{ country|country }} ({{ number }})
+            </a>
+            {% if loop.index > 4 %}
+                <li>
+                    <a href="#" class="filter-action"><img class="sprite-icon-dark-arrow-up" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="^" /> {{ 'home.less'|trans }} </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
